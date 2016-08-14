@@ -10,15 +10,15 @@ public class Main {
 	static Random rd = new Random();
 
 	public static void main(String[] args) {
-		Hero hero = null;
-		setHeroName(hero);
+		Hero hero = new Hero(setHeroName());
+		System.out.println(hero.toString());
 
 	}
 
 	@SuppressWarnings("static-access")
-	static void setHeroName(Hero hero) {
+	static String setHeroName() {
 		System.out.println("prepare to enter hero's name.");
-		System.out.println("minimum 3 characters long! Only letters; digits; and ',' ;'.';'-';'_' allowed");
+		System.out.println("minimum 3 characters long! Only letters; digits; and ',' ; '.' ; '-' ; '_' allowed");
 		String name;
 		boolean nameOK;
 		do {
@@ -46,7 +46,7 @@ public class Main {
 			}
 		} while (!nameOK);
 		System.out.println("a Hero with the name " + name + " was created!");
-		hero = new Hero(name);
+		return name;
 	}
 
 }

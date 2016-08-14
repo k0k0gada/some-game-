@@ -5,4 +5,5 @@ public class Armor extends Item {
 		super(name);
 		this.setType("armor");
 	}
+	
 }
