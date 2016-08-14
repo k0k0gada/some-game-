@@ -6,13 +6,14 @@ import java.util.Scanner;
 import characters.Hero;
 
 public class Main {
-	static Scanner sc = new Scanner(System.in);
-	static Random rd = new Random();
+	public static Scanner sc = new Scanner(System.in);
+	public static Random rd = new Random();
 
 	public static void main(String[] args) {
 		Hero hero = new Hero(setHeroName());
+		hero.setExp(20);
+		hero.checkLevelUp();
 		System.out.println(hero.toString());
-
 	}
 
 	@SuppressWarnings("static-access")

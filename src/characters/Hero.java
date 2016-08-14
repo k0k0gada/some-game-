@@ -9,6 +9,7 @@ import items.Gloves;
 import items.Helmet;
 import items.Item;
 import items.Weapon;
+import main.Main;
 
 public class Hero {
 	private String name;
@@ -52,6 +53,9 @@ public class Hero {
 		this.critMultiplier = 1.5;
 
 		this.armor = new Armor("shirt");
+		this.armor.setDefInc(2);
+		this.armor.setMaxHPInc(5);
+		this.armor.setSpeedInc(5);
 		this.itemList.add(this.armor);
 
 		this.boots = new Boots("galoshes");
@@ -66,6 +70,10 @@ public class Hero {
 		this.wep = new Weapon("fists");
 		this.itemList.add(this.wep);
 
+	}
+
+	public java.util.HashSet<Item> getItemList() {
+		return itemList;
 	}
 
 	@Override
@@ -137,4 +145,57 @@ public class Hero {
 		this.itemList.add(item);// adds the item to the SET of equipped items
 	}
 
+	public boolean checkLevelUp() {
+		if (this.exp < this.expNeeded) {
+			return false;
+		} else {
+			this.level++;
+			this.exp = 0;
+			this.expNeeded = this.level * 15;
+			System.out.println("CONGRATULATIONS YOU LEVELED UP! ");
+			getLevelUpBonus();
+			this.HP = this.MAXHP;
+			return true;
+		}
+	}
+
+	public void setExp(int exp) {// remove !!!
+		this.exp = exp;
+	}
+
+	private void getLevelUpBonus() {
+
+		System.out.println("what two stats would you like to increase ?");
+		System.out.println(
+				"1-max HP(+14);\t2-dmg(+2);\t3-def(+2);\n4-attack speed(+5);\t5-crit chance(+4%);\t6-crit multiplier(+0.15)");
+		for (int i = 0; i < 2; i++) {
+			System.out.println("choose option:");
+			switch (Main.sc.nextInt()) {
+			case 1:
+				this.MAXHP += 14;
+				System.out.println("max hp increased to:" + this.MAXHP);
+				break;
+			case 2:
+				this.dmg += 2;
+				System.out.println("Hero's dmg increased to:" + this.dmg);
+				break;
+			case 3:
+				this.defence += 2;
+				System.out.println("Hero's def increased to:" + this.defence);
+				break;
+			case 4:
+				this.attackSpeed -= 5;
+				System.out.println("Attack speed increased to:" + (100 - this.attackSpeed));
+				break;
+			case 5:
+				this.critChance += 4;
+				System.out.println("Critical chance increased to:" + this.critChance);
+				break;
+			case 6:
+				this.critMultiplier += 0.15;
+				System.out.println("Critical multiplier increased to:" + this.critMultiplier);
+				break;
+			}
+		}
+	}
 }

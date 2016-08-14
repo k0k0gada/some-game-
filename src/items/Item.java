@@ -40,10 +40,33 @@ public class Item {
 	public int getDefInc() {
 		return defInc;
 	}
-	
 
 	public int getSpeedInc() {
 		return speedInc;
+	}
+
+	public void setAttackInc(int attackInc) {
+		this.attackInc = attackInc;
+	}
+
+	public void setDefInc(int defInc) {
+		this.defInc = defInc;
+	}
+
+	public void setSpeedInc(int speedInc) {
+		this.speedInc = speedInc;
+	}
+
+	public void setCritChanceInc(double critChanceInc) {
+		this.critChanceInc = critChanceInc;
+	}
+
+	public void setCritMultiplierInc(double critMultiplierInc) {
+		this.critMultiplierInc = critMultiplierInc;
+	}
+
+	public void setMaxHPInc(int maxHPInc) {
+		this.maxHPInc = maxHPInc;
 	}
 
 	@Override
@@ -73,7 +96,7 @@ public class Item {
 
 	@Override
 	public String toString() {
-		String s = "type= " + type + "; " + name + " \n";
+		String s = "" + type + ": " + name + " \n";
 		if (attackInc != 0) {
 			s = s + " attack bonus= " + this.attackInc;
 			s = s + "\n";
