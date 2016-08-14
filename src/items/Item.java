@@ -37,6 +37,18 @@ public class Item {
 		return attackInc;
 	}
 
+	public double getCritChanceInc() {
+		return critChanceInc;
+	}
+
+	public double getCritMultiplierInc() {
+		return critMultiplierInc;
+	}
+
+	public int getMaxHPInc() {
+		return maxHPInc;
+	}
+
 	public int getDefInc() {
 		return defInc;
 	}
@@ -96,7 +108,7 @@ public class Item {
 
 	@Override
 	public String toString() {
-		String s = "" + type + ": " + name + " \n";
+		String s = "\n" + type + ": " + name + " \n";
 		if (attackInc != 0) {
 			s = s + " attack bonus= " + this.attackInc;
 			s = s + "\n";

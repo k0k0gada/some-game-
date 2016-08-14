@@ -46,30 +46,92 @@ public class Hero {
 		this.exp = 0;
 		this.dmg = 10;
 		this.attackSpeed = 70;
-		this.defence = 5;
+		this.defence = 4;
 		this.MAXHP = 100;
 		this.HP = this.MAXHP;
 		this.critChance = 5;// 5 %;5 out of 100
 		this.critMultiplier = 1.5;
 
 		this.armor = new Armor("shirt");
-		this.armor.setDefInc(2);
-		this.armor.setMaxHPInc(5);
+		this.armor.setDefInc(1);
+		this.armor.setMaxHPInc(3);
 		this.armor.setSpeedInc(5);
 		this.itemList.add(this.armor);
 
 		this.boots = new Boots("galoshes");
+		this.boots.setDefInc(1);
+		this.boots.setSpeedInc(-5);
+		this.boots.setMaxHPInc(2);
 		this.itemList.add(this.boots);
 
 		this.gloves = new Gloves("no gloves");
+		this.gloves.setCritMultiplierInc(-0.3);
+		this.gloves.setAttackInc(-1);
 		this.itemList.add(this.gloves);
 
 		this.helmet = new Helmet("baldness");
+		this.helmet.setDefInc(-1);
+		this.helmet.setMaxHPInc(-3);
 		this.itemList.add(this.helmet);
 
 		this.wep = new Weapon("fists");
+		this.wep.setAttackInc(-2);
+		this.wep.setCritChanceInc(40);
+		this.wep.setSpeedInc(30);
 		this.itemList.add(this.wep);
+		if (this.HP < this.getMAXHP()) {
+			this.HP = this.getMAXHP();
+		}
+	}
 
+	int getAllDMG() {
+		int tempDMG = 0;
+		for (Item item : itemList) {
+			tempDMG += item.getAttackInc();
+		}
+		return (this.dmg + tempDMG);
+	}
+
+	int getAllDef() {
+		int tempRed = 0;
+		for (Item item : itemList) {
+			tempRed += item.getDefInc();
+		}
+		return (this.defence + tempRed);
+	}
+
+	int getALLAttackSpeed() {
+		int tempSp = 0;
+		for (Item item : itemList) {
+			tempSp += item.getSpeedInc();
+		}
+		return (100 - (this.attackSpeed - tempSp));
+
+	}
+
+	int getMAXHP() {
+		int tempHP = 0;
+		for (Item item : itemList) {
+			tempHP += item.getMaxHPInc();
+		}
+		checkHPmoreThanMaxHP();
+		return (this.MAXHP + tempHP);
+	}
+
+	int getCritChance() {
+		int tempCS = 0;// crit chance
+		for (Item item : itemList) {
+			tempCS += item.getCritChanceInc();
+		}
+		return (this.critChance + tempCS);
+	}
+
+	double getCritMultiplier() {
+		double tempCM = 0;// crit multiplier
+		for (Item item : itemList) {
+			tempCM += item.getCritMultiplierInc();
+		}
+		return (this.critMultiplier + tempCM);
 	}
 
 	public java.util.HashSet<Item> getItemList() {
@@ -86,7 +148,12 @@ public class Hero {
 		s = s + "\n";
 		s = s + "coins: " + this.coins;
 		s = s + "\n";
-		s = s + "HP/MaxHP " + this.HP + "/" + this.MAXHP;
+		int tempHP = 0;
+		for (Item item : itemList) {
+			tempHP += item.getMaxHPInc();
+		}
+		checkHPmoreThanMaxHP();
+		s = s + "HP/MaxHP " + this.HP + "/" + (this.MAXHP + tempHP);
 		s = s + "\n";
 		s = s + "hero's stats(hero's stats + item bonuses):";
 		s = s + "\n";
@@ -102,14 +169,33 @@ public class Hero {
 		for (Item item : itemList) {
 			tempSp += item.getSpeedInc();
 		}
-		s = s + "dmg: " + (this.dmg + tempDMG) + " (" + this.dmg + " + " + tempDMG + ")" + "\t dmg reduction: "
-				+ (this.defence + tempRed) + " (" + this.defence + " + " + tempRed + ")" + "\tspeed="
-				+ (100 - ((this.attackSpeed - tempSp < 1) ? 0 : (this.attackSpeed - tempSp))) + "("
+		s = s + "dmg: " + this.getAllDMG() + " (" + this.dmg + " + " + tempDMG + ")" + "\t dmg reduction: "
+				+ this.getAllDef() + " (" + this.defence + " + " + tempRed + ")" + "\tspeed="
+				+ (100 - ((this.attackSpeed - tempSp < 1) ? 100 : (this.attackSpeed - tempSp))) + "("
 				+ (100 - this.attackSpeed) + " + " + (tempSp) + ")";
 		s = s + "\n";
-		s = s + "crit chance | multiplier :" + this.critChance + "|" + this.critMultiplier;
+		int tempCS = 0;// crit chance
+		for (Item item : itemList) {
+			tempCS += item.getCritChanceInc();
+		}
+		double tempCM = 0;// crit multiplier
+		for (Item item : itemList) {
+			tempCM += item.getCritMultiplierInc();
+		}
+		s = s + "crit chance | multiplier :" + this.getCritChance() + " (" + this.critChance + " + " + tempCS + ") "
+				+ "%|" + this.getCritMultiplier() + " (" + this.critMultiplier + " + " + tempCM + ")";
 		s = s + "\n";
 		return s;
+	}
+
+	void checkHPmoreThanMaxHP() {
+		int tempHP = 0;
+		for (Item item : itemList) {
+			tempHP += item.getMaxHPInc();
+		}
+		if (this.HP > (this.MAXHP + tempHP)) {
+			this.HP = this.MAXHP;
+		}
 	}
 
 	void equipItem(Item item) {
@@ -159,10 +245,6 @@ public class Hero {
 		}
 	}
 
-	public void setExp(int exp) {// remove !!!
-		this.exp = exp;
-	}
-
 	private void getLevelUpBonus() {
 
 		System.out.println("what two stats would you like to increase ?");
@@ -197,5 +279,6 @@ public class Hero {
 				break;
 			}
 		}
+		System.out.println(this.toString());
 	}
 }
