@@ -10,9 +10,11 @@ import items.Helmet;
 import items.Item;
 import items.Weapon;
 import main.Main;
+import monsters.Monster;
 
 public class Hero {
 	private String name;
+	// level&gold
 	private int level;
 	private int exp;
 	private int expNeeded;
@@ -29,7 +31,7 @@ public class Hero {
 
 	// items:
 
-	private java.util.HashSet<Item> itemList = new HashSet<>();
+	private java.util.HashSet<Item> itemSet = new HashSet<>();
 	private Weapon wep;
 	private Armor armor;
 	private Boots boots;
@@ -38,6 +40,9 @@ public class Hero {
 
 	// inventory:
 	ArrayList<Item> inventory = new ArrayList<>();
+
+	// enemy
+	Monster enemy;
 
 	public Hero(String name) {
 		this.name = name;
@@ -56,37 +61,41 @@ public class Hero {
 		this.armor.setDefInc(1);
 		this.armor.setMaxHPInc(3);
 		this.armor.setSpeedInc(5);
-		this.itemList.add(this.armor);
+		this.itemSet.add(this.armor);
 
 		this.boots = new Boots("galoshes");
 		this.boots.setDefInc(1);
 		this.boots.setSpeedInc(-5);
 		this.boots.setMaxHPInc(2);
-		this.itemList.add(this.boots);
+		this.itemSet.add(this.boots);
 
 		this.gloves = new Gloves("no gloves");
 		this.gloves.setCritMultiplierInc(-0.3);
 		this.gloves.setAttackInc(-1);
-		this.itemList.add(this.gloves);
+		this.itemSet.add(this.gloves);
 
 		this.helmet = new Helmet("baldness");
 		this.helmet.setDefInc(-1);
 		this.helmet.setMaxHPInc(-3);
-		this.itemList.add(this.helmet);
+		this.itemSet.add(this.helmet);
 
 		this.wep = new Weapon("fists");
 		this.wep.setAttackInc(-2);
 		this.wep.setCritChanceInc(40);
 		this.wep.setSpeedInc(30);
-		this.itemList.add(this.wep);
+		this.itemSet.add(this.wep);
 		if (this.HP < this.getMAXHP()) {
 			this.HP = this.getMAXHP();
 		}
 	}
 
+	public int getLevel() {
+		return level;
+	}
+
 	int getAllDMG() {
 		int tempDMG = 0;
-		for (Item item : itemList) {
+		for (Item item : itemSet) {
 			tempDMG += item.getAttackInc();
 		}
 		return (this.dmg + tempDMG);
@@ -94,7 +103,7 @@ public class Hero {
 
 	int getAllDef() {
 		int tempRed = 0;
-		for (Item item : itemList) {
+		for (Item item : itemSet) {
 			tempRed += item.getDefInc();
 		}
 		return (this.defence + tempRed);
@@ -102,7 +111,7 @@ public class Hero {
 
 	int getALLAttackSpeed() {
 		int tempSp = 0;
-		for (Item item : itemList) {
+		for (Item item : itemSet) {
 			tempSp += item.getSpeedInc();
 		}
 		return (100 - (this.attackSpeed - tempSp));
@@ -111,7 +120,7 @@ public class Hero {
 
 	int getMAXHP() {
 		int tempHP = 0;
-		for (Item item : itemList) {
+		for (Item item : itemSet) {
 			tempHP += item.getMaxHPInc();
 		}
 		checkHPmoreThanMaxHP();
@@ -120,7 +129,7 @@ public class Hero {
 
 	int getCritChance() {
 		int tempCS = 0;// crit chance
-		for (Item item : itemList) {
+		for (Item item : itemSet) {
 			tempCS += item.getCritChanceInc();
 		}
 		return (this.critChance + tempCS);
@@ -128,14 +137,14 @@ public class Hero {
 
 	double getCritMultiplier() {
 		double tempCM = 0;// crit multiplier
-		for (Item item : itemList) {
+		for (Item item : itemSet) {
 			tempCM += item.getCritMultiplierInc();
 		}
 		return (this.critMultiplier + tempCM);
 	}
 
-	public java.util.HashSet<Item> getItemList() {
-		return itemList;
+	public java.util.HashSet<Item> getItemSet() {
+		return itemSet;
 	}
 
 	@Override
@@ -148,38 +157,27 @@ public class Hero {
 		s = s + "\n";
 		s = s + "coins: " + this.coins;
 		s = s + "\n";
-		int tempHP = 0;
-		for (Item item : itemList) {
-			tempHP += item.getMaxHPInc();
-		}
-		checkHPmoreThanMaxHP();
-		s = s + "HP/MaxHP " + this.HP + "/" + (this.MAXHP + tempHP);
+		s = s + "HP/MaxHP " + this.HP + "/" + this.getMAXHP();
 		s = s + "\n";
 		s = s + "hero's stats(hero's stats + item bonuses):";
 		s = s + "\n";
-		int tempDMG = 0;
-		for (Item item : itemList) {
-			tempDMG += item.getAttackInc();
-		}
-		int tempRed = 0;
-		for (Item item : itemList) {
-			tempRed += item.getDefInc();
-		}
-		int tempSp = 0;
-		for (Item item : itemList) {
-			tempSp += item.getSpeedInc();
-		}
-		s = s + "dmg: " + this.getAllDMG() + " (" + this.dmg + " + " + tempDMG + ")" + "\t dmg reduction: "
-				+ this.getAllDef() + " (" + this.defence + " + " + tempRed + ")" + "\tspeed="
-				+ (100 - ((this.attackSpeed - tempSp < 1) ? 100 : (this.attackSpeed - tempSp))) + "("
-				+ (100 - this.attackSpeed) + " + " + (tempSp) + ")";
+		// int tempSp = 0;
+		// for (Item item : itemList) {
+		// tempSp += item.getSpeedInc();
+		// }
+		s = s + "dmg: " + this.getAllDMG() + " (" + this.dmg + " + " + (this.getAllDMG() - this.dmg) + ")"
+				+ "\t dmg reduction: " + this.getAllDef() + " (" + this.defence + " + "
+				+ (this.getAllDef() - this.defence) + ")" + "\tspeed="
+				+ (100 - ((this.attackSpeed - (this.getALLAttackSpeed() - this.attackSpeed) < 1) ? 100
+						: (this.attackSpeed - (this.getALLAttackSpeed() - this.attackSpeed))))
+				+ "(" + (100 - this.attackSpeed) + " + " + (this.getALLAttackSpeed() - this.attackSpeed) + ")";
 		s = s + "\n";
 		int tempCS = 0;// crit chance
-		for (Item item : itemList) {
+		for (Item item : itemSet) {
 			tempCS += item.getCritChanceInc();
 		}
 		double tempCM = 0;// crit multiplier
-		for (Item item : itemList) {
+		for (Item item : itemSet) {
 			tempCM += item.getCritMultiplierInc();
 		}
 		s = s + "crit chance | multiplier :" + this.getCritChance() + " (" + this.critChance + " + " + tempCS + ") "
@@ -190,7 +188,7 @@ public class Hero {
 
 	void checkHPmoreThanMaxHP() {
 		int tempHP = 0;
-		for (Item item : itemList) {
+		for (Item item : itemSet) {
 			tempHP += item.getMaxHPInc();
 		}
 		if (this.HP > (this.MAXHP + tempHP)) {
@@ -202,33 +200,34 @@ public class Hero {
 		this.inventory.remove(item);// removes the item from the inventory
 		switch (item.getType()) {// what is the item ?
 		case "armor":
-			this.inventory.add(this.armor);// moves the currently equipped armor
-											// to the inventory
-			this.itemList.remove(this.armor);// removes the armor from item set
+			// moves the currently equipped armor to the inventory
+			this.inventory.add(this.armor);
+			this.itemSet.remove(this.armor);// removes the armor from item set
 			this.armor = (Armor) item;// places the item on the correct place
 			break;
 		case "boots":
 			this.inventory.add(this.boots);
-			this.itemList.remove(this.armor);
+			this.itemSet.remove(this.armor);
 			this.boots = (Boots) item;
 			break;
 		case "gloves":
 			this.inventory.add(this.gloves);
-			this.itemList.remove(this.armor);
+			this.itemSet.remove(this.armor);
 			this.gloves = (Gloves) item;
 			break;
 		case "helmet":
 			this.inventory.add(this.helmet);
-			this.itemList.remove(this.armor);
+			this.itemSet.remove(this.armor);
 			this.helmet = (Helmet) item;
 			break;
 		case "weapon":
 			this.inventory.add(this.wep);
-			this.itemList.remove(this.armor);
+			this.itemSet.remove(this.armor);
 			this.wep = (Weapon) item;
 			break;
 		}
-		this.itemList.add(item);// adds the item to the SET of equipped items
+		checkHPmoreThanMaxHP();
+		this.itemSet.add(item);// adds the item to the SET of equipped items
 	}
 
 	public boolean checkLevelUp() {
@@ -281,4 +280,5 @@ public class Hero {
 		}
 		System.out.println(this.toString());
 	}
+
 }

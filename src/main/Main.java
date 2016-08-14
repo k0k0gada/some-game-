@@ -12,7 +12,7 @@ public class Main {
 	public static void main(String[] args) {
 		Hero hero = new Hero(setHeroName());
 		System.out.println(hero.toString());
-		System.out.println(hero.getItemList().toString());
+		System.out.println(hero.getItemSet().toString());
 	}
 
 	@SuppressWarnings("static-access")
