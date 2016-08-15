@@ -10,7 +10,7 @@ public class BossMonsters extends Monster {
 	final int MAX_CRIT_CHANCE_MODIFIER = 75;
 	final double MAX_CRIT_MULTIPLIER_MODIFIER = 5;
 
-	BossMonsters(Hero enemy) {
+	public BossMonsters(Hero enemy) {
 		super(enemy);
 		this.setType("BOSS");
 

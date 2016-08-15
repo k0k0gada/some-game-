@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import characters.Hero;
+import monsters.EasyMonster;
 
 public class Main {
 	public static Scanner sc = new Scanner(System.in);
@@ -11,8 +12,10 @@ public class Main {
 
 	public static void main(String[] args) {
 		Hero hero = new Hero(setHeroName());
-		System.out.println(hero.toString());
-		System.out.println(hero.getItemSet().toString());
+		// System.out.println(hero.toString());
+		// System.out.println(hero.getItemSet().toString());
+		EasyMonster a = new EasyMonster(hero);
+		hero.fight(a);
 	}
 
 	@SuppressWarnings("static-access")

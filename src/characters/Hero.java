@@ -135,6 +135,10 @@ public class Hero {
 		return (this.critChance + tempCS);
 	}
 
+	public void setEnemy(Monster enemy) {
+		this.enemy = enemy;
+	}
+
 	double getCritMultiplier() {
 		double tempCM = 0;// crit multiplier
 		for (Item item : itemSet) {
@@ -281,4 +285,41 @@ public class Hero {
 		System.out.println(this.toString());
 	}
 
+	public boolean isAlive() {
+		return (this.HP > 0 ? true : false);
+	}
+
+	public void takeDMG(int dmg) {
+		this.HP = this.HP - (dmg - this.getAllDef());
+		System.out.println("the hero took " + (dmg - this.getAllDef()) + " dmg");
+		System.out.println(this.isAlive() ? "the hero still has " + this.HP + " HP" : " the hero died");
+	}
+
+	public void fight(Monster enemy) {
+		this.setEnemy(enemy);
+		System.out.println(enemy.toString());
+		System.out.println(this.toString());
+		int heroTurn = this.getALLAttackSpeed();
+		int MonsterTurn = this.enemy.getAttackSpeed();
+		do {
+			heroTurn--;
+			MonsterTurn--;
+			if (heroTurn == 0) {
+				System.out.println("the hero hits with " + this.getAllDMG() + " dmg");
+				this.enemy.takeDMG(this.getAllDMG());
+				heroTurn = this.getALLAttackSpeed();
+				System.out.println();
+			}
+			if (MonsterTurn == 0) {
+				System.out.println("the monster hits with " + this.enemy.getDmg() + " dmg");
+				this.takeDMG(this.enemy.getDmg());
+				MonsterTurn = this.enemy.getAttackSpeed();
+				System.out.println();
+			}
+
+		} while (this.isAlive() && this.enemy.isAlive());
+		if (this.isAlive()) {
+			System.out.println("the hero won!");
+		}
+	}
 }

@@ -103,4 +103,21 @@ public abstract class Monster {
 	static void countINC() {
 		counter++;
 	}
+
+	public boolean isAlive() {
+		return (this.HP > 0 ? true : false);
+	}
+
+	@Override
+	public String toString() {
+		return "Monster [type=" + type + ", name=" + name + ", level=" + level + ", HP=" + HP + ", MAXHP=" + MAXHP
+				+ ", dmg=" + dmg + ", defence=" + defence + ", attackSpeed=" + attackSpeed + ", critChance="
+				+ critChance + ", critMultiplier=" + critMultiplier + "]";
+	}
+
+	public void takeDMG(int dmg) {
+		this.HP = this.HP - (dmg - this.getDefence());
+		System.out.println("the monster took " + (dmg - this.defence) + " dmg");
+		System.out.println(this.isAlive() ? "the monster still has " + this.HP + " HP" : " the monster died");
+	}
 }
