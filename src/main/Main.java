@@ -6,21 +6,234 @@ import java.util.Scanner;
 
 import characters.Hero;
 import monsters.BossMonsters;
-import monsters.EasyMonster;
+import monsters.EasyMonsters;
 import monsters.HardMonsters;
-import monsters.MedMonster;
+import monsters.MedMonsters;
 import monsters.Monster;
 
 public class Main {
+	static ArrayList<Monster> monsters = new ArrayList<>();
 	public static Scanner sc = new Scanner(System.in);
 	public static Random rd = new Random();
 
 	public static void main(String[] args) {
-		Hero hero = new Hero(setHeroName());
-		ArrayList<Monster> monsters = new ArrayList<>();
-		do {
+		System.out.println("would you like to create a hero ? y/n");
+		char z = sc.nextLine().charAt(0);
+		if (z == 'y' || z == 'Y') {
+			Hero hero = new Hero(setHeroName());
 
-		} while (true);
+			do {
+				chooseOption(hero);
+
+			} while (true);
+		} else {
+			System.out.println("you don't want ot play my game :( so SAD  :(  :(   \n BYE BYE !!");
+		}
+	}
+
+	private static void chooseOption(Hero hero) {
+		String s;
+		System.out.println("what will you do? ");
+		System.out.println("1=go fight");
+		System.out.println("enter your choice now:");
+		s = sc.nextLine();
+		switch (s.charAt(0)) {
+		case '1':
+			ChooseEnemy(hero);
+			break;
+		default:
+			System.out.println("wrong choice!CHOOSE AGAIN!");
+			chooseOption(hero);
+			break;
+		}
+	}
+
+	private static Monster ChooseEnemy(Hero hero) {
+		String s;
+		Monster m = null;
+		int moreLevels = 1 + Main.rd.nextInt(2);
+		if (hero.getLevel() == 1) {
+			System.out.println("what would you like to look for ?");
+			System.out.println(
+					"easy/medium/hard/BOSS\t  !THERE IS ALWAYS 3 % chance to get a boss and 1 % to get ultimate BOSS!\n"
+							+ " AND 7 % chance to get other kind of monster ");
+			System.out.println("e=easy;m=medium;h=hard;b=boss;se=stronger easy;sm=stronger medium;\nsh=stronger hard;"
+					+ "sb=stronger BOSS;0=back");
+			String[] options = { "e", "m", "h", "b", "se", "sm", "sh", "sb" };
+			s = sc.nextLine();
+
+			if (s.startsWith("0")) {
+				chooseOption(hero);
+			}
+			int rd = Main.randomNumTo100();
+			if (rd == 69) {// if the number is 69 ,you get an ultimate boss
+
+				BossMonsters ub = new BossMonsters(hero, 12);// ub=ult boss
+				if (!monsters.contains(ub)) {
+					monsters.add(ub);
+				}
+				return ub;
+			}
+			if (rd == 23 || rd == 54 || rd == 78) {
+				BossMonsters nb = new BossMonsters(hero);// new boss
+				monsters.add(nb);
+				return nb;
+			}
+			if (rd > 92) {// if u get 7 % chance then you get a random monster
+				s = options[(Main.rd.nextInt(options.length))];
+			}
+			for (int i = 0; i < options.length; i++) {// sees what s is,and
+														// makes it
+				if (s.startsWith(options[i])) {
+					s = options[i];
+					break;
+				}
+			}
+			switch (s) {
+			case "e":
+				EasyMonsters em = new EasyMonsters(hero);
+				m = em;
+				monsters.add(em);
+				break;
+			case "se":
+				EasyMonsters sem = new EasyMonsters(hero, hero.getLevel() + moreLevels);
+				m = sem;
+				monsters.add(sem);
+				break;
+			case "m":
+				MedMonsters mm = new MedMonsters(hero);
+				m = mm;
+				monsters.add(mm);
+				break;
+			case "sm":
+				MedMonsters smm = new MedMonsters(hero, hero.getLevel() + moreLevels);
+				m = smm;
+				monsters.add(smm);
+				break;
+			case "h":
+				HardMonsters hm = new HardMonsters(hero);
+				m = hm;
+				monsters.add(hm);
+				break;
+			case "sh":
+				HardMonsters shm = new HardMonsters(hero, hero.getLevel() + moreLevels);
+				m = shm;
+				monsters.add(shm);
+				break;
+			case "b":
+				BossMonsters bm = new BossMonsters(hero);
+				m = bm;
+				monsters.add(bm);
+				break;
+			case "sb":
+				BossMonsters hbm = new BossMonsters(hero, hero.getLevel() + moreLevels);
+				m = hbm;
+				monsters.add(hbm);
+				break;
+			}
+			return m;
+		} else {
+			System.out.println("what would you like to look for ?");
+			System.out.println(
+					"easy/medium/hard/BOSS\t  !THERE IS ALWAYS 3 % chance to get a boss and 1 % to get ultimate BOSS!\n"
+							+ " AND 7 % chance to get other kind of monster ");
+			System.out.println("e=easy;m=medium;h=hard;b=boss;se=stronger easy;sm=stronger medium;\nsh=stronger hard;"
+					+ "sb=stronger BOSS;\nwe=weaker easy;wm=weaker medium;wh=weaker hard;wb=weaker boss;0=back");
+
+			String[] options = { "e", "m", "h", "b", "se", "sm", "sh", "sb", "we", "wm", "wh", "wb" };
+
+			s = sc.nextLine();
+			if (s.startsWith("0")) {
+				chooseOption(hero);
+			}
+			int rd = Main.randomNumTo100();
+			if (rd == 69) {// if the number is 69 ,you get an ultimate boss
+				BossMonsters ub = new BossMonsters(hero, 12);// ub=ult boss
+				if (!monsters.contains(ub)) {
+					monsters.add(ub);
+				}
+				return ub;
+			}
+			if (rd == 23 || rd == 54 || rd == 78) {
+				BossMonsters nb = new BossMonsters(hero);// new boss
+				monsters.add(nb);
+				return nb;
+			}
+			if (rd > 92) {// if u get 7 % chance then you get a random monster
+				s = options[(Main.rd.nextInt(options.length))];
+			}
+			for (int i = 0; i < options.length; i++) {// sees what s is,and
+														// makes it
+				if (s.startsWith(options[i])) {
+					s = options[i];
+					break;
+				}
+			}
+
+			switch (s) {
+			case "e":
+				EasyMonsters em = new EasyMonsters(hero);
+				m = em;
+				monsters.add(em);
+				break;
+			case "se":
+				EasyMonsters sem = new EasyMonsters(hero, hero.getLevel() + moreLevels);
+				m = sem;
+				monsters.add(sem);
+				break;
+			case "m":
+				MedMonsters mm = new MedMonsters(hero);
+				m = mm;
+				monsters.add(mm);
+				break;
+			case "sm":
+				MedMonsters smm = new MedMonsters(hero, hero.getLevel() + moreLevels);
+				m = smm;
+				monsters.add(smm);
+				break;
+			case "h":
+				HardMonsters hm = new HardMonsters(hero);
+				m = hm;
+				monsters.add(hm);
+				break;
+			case "sh":
+				HardMonsters shm = new HardMonsters(hero, hero.getLevel() + moreLevels);
+				m = shm;
+				monsters.add(shm);
+				break;
+			case "b":
+				BossMonsters bm = new BossMonsters(hero);
+				m = bm;
+				monsters.add(bm);
+				break;
+			case "sb":
+				BossMonsters hbm = new BossMonsters(hero, hero.getLevel() + moreLevels);
+				m = hbm;
+				monsters.add(hbm);
+				break;
+			case "we":
+				EasyMonsters wem = new EasyMonsters(hero);
+				m = wem;
+				monsters.add(wem);
+				break;
+			case "wm":
+				MedMonsters wmm = new MedMonsters(hero);
+				m = wmm;
+				monsters.add(wmm);
+				break;
+			case "wh":
+				HardMonsters whm = new HardMonsters(hero);
+				m = whm;
+				monsters.add(whm);
+				break;
+			case "wb":
+				BossMonsters wbm = new BossMonsters(hero);
+				m = wbm;
+				monsters.add(wbm);
+				break;
+			}
+			return m;
+		}
 
 	}
 

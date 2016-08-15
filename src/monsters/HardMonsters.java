@@ -30,4 +30,23 @@ public class HardMonsters extends Monster {
 		this.setCritMultiplier(MAX_CRIT_MULTIPLIER_MODIFIER);
 	}
 
+	public HardMonsters(Hero enemy, int level) {
+		super(enemy, level);
+		this.setType("strong");
+		this.setDmg((int) (this.getDmg() * this.HP_DMG_DIFFICULTY_MODIFIER));
+		this.setMAXHP((int) (this.getMAXHP() * this.HP_DMG_DIFFICULTY_MODIFIER));
+		this.setHP(this.getMAXHP());
+
+		this.setDefence((int) (this.getDefence() * this.DEF_DIFFICULTY_MODIFIER));
+		this.setAttackSpeed(this.getAttackSpeed() / 2);
+		if (this.getAttackSpeed() < MAX_ATTACK_SPEED_MODIFIER) {
+			this.setAttackSpeed(MAX_ATTACK_SPEED_MODIFIER);
+		}
+
+		if (this.getCritChance() > MAX_CRIT_CHANCE_MODIFIER) {
+			this.setCritChance(MAX_CRIT_CHANCE_MODIFIER);
+		}
+		this.setCritMultiplier(MAX_CRIT_MULTIPLIER_MODIFIER);
+	}
+
 }

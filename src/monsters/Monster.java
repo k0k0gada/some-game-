@@ -23,7 +23,7 @@ public abstract class Monster {
 	private String name;
 	private int level;
 	private Hero enemy;
-
+	// stats
 	private int HP;
 	private int MAXHP;
 	private int dmg;
@@ -31,11 +31,26 @@ public abstract class Monster {
 	private int attackSpeed;// 1-fastest,100-slowest;in game shown inverted
 	private int critChance;
 	private double critMultiplier;
+	// drop:
 
-	Monster(Hero enemy) {
+	public Monster(Hero enemy) {
 		this.name = "monster" + counter;
 		countINC();
 		this.level = enemy.getLevel();
+		this.MAXHP = this.MIN_HP + this.level * this.HP_PER_LEVEL;
+		this.HP = this.MAXHP;
+		this.dmg = this.MIN_DMG + this.DMG_PER_LEVEL * this.level;
+		this.defence = this.MIN_DEF + this.DEF_PER_LEVEL * this.level;
+		this.attackSpeed = 100 - this.ATTACK_SPEED_PER_LEVEL * this.level;
+		this.critChance = this.MIN_CRIT_CHANCE + this.CRIT_CHANCE_PER_LEVEL * this.level;
+		this.critMultiplier = this.MIN_CRIT_MULTIPLIER + this.MIN_CRIT_MULTIPLIER * this.level;
+		System.out.println("A " + this.type + " Monster was created");
+	}
+
+	public Monster(Hero enemy, int level) {
+		this.name = "monster" + counter;
+		countINC();
+		this.level = level;
 		this.MAXHP = this.MIN_HP + this.level * this.HP_PER_LEVEL;
 		this.HP = this.MAXHP;
 		this.dmg = this.MIN_DMG + this.DMG_PER_LEVEL * this.level;

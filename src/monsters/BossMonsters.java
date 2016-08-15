@@ -29,4 +29,30 @@ public class BossMonsters extends Monster {
 		}
 		this.setCritMultiplier(MAX_CRIT_MULTIPLIER_MODIFIER);
 	}
+
+	public BossMonsters(Hero enemy, int level) {
+		super(enemy, level);
+		this.setType("BOSS");
+
+		this.setDmg((int) (this.getDmg() * this.HP_DMG_DIFFICULTY_MODIFIER));
+		this.setMAXHP((int) (this.getMAXHP() * this.HP_DMG_DIFFICULTY_MODIFIER));
+		this.setHP(this.getMAXHP());
+
+		this.setDefence((int) (this.getDefence() * this.DEF_DIFFICULTY_MODIFIER));
+		this.setAttackSpeed(this.getAttackSpeed() / 2);
+		if (this.getAttackSpeed() < MAX_ATTACK_SPEED_MODIFIER) {
+			this.setAttackSpeed(MAX_ATTACK_SPEED_MODIFIER);
+		}
+
+		if (this.getCritChance() > MAX_CRIT_CHANCE_MODIFIER) {
+			this.setCritChance(MAX_CRIT_CHANCE_MODIFIER);
+		}
+		this.setCritMultiplier(MAX_CRIT_MULTIPLIER_MODIFIER);
+		if (level == 12) {// for ultimate boss ^_^
+			this.setAttackSpeed(2);
+			this.setCritChance(95);
+			this.setCritMultiplier(8);
+		}
+	}
+
 }
