@@ -1,6 +1,7 @@
 package monsters;
 
 import characters.Hero;
+import main.Main;
 
 public abstract class Monster {
 	static int counter = 0;
@@ -115,9 +116,30 @@ public abstract class Monster {
 				+ critChance + ", critMultiplier=" + critMultiplier + "]";
 	}
 
+	public int CalculateCritAndFluctuating() {
+		// critical..
+		int dmg;
+		dmg = this.getDmg();
+		if (Main.randomNumTo100() < this.getCritChance()) {
+			dmg *= this.getCritMultiplier();
+			System.out.print("the Monster critted!");
+		}
+		double fluctiuationDMG = 0.9 + (Main.randomNum() / 5);// +-10% dmg
+		return (int) (dmg * fluctiuationDMG);
+	}
+
 	public void takeDMG(int dmg) {
-		this.HP = this.HP - (dmg - this.getDefence());
-		System.out.println("the monster took " + (dmg - this.defence) + " dmg");
-		System.out.println(this.isAlive() ? "the monster still has " + this.HP + " HP" : " the monster died");
+		if (Main.randomNumTo100() > 79) {
+			System.out.println("the monster DODGED !");
+		} else {
+			if (dmg - this.getDefence() > 1) {
+				this.HP = this.HP - (dmg - this.getDefence());
+				System.out.println("the monster took " + (dmg - this.defence) + " dmg");
+			} else {
+				this.HP--;
+				System.out.println("the monster took 1 dmg.TOO MUCH DEF");
+			}
+		}
+		System.out.println(this.isAlive() ? "the monster still has " + this.HP + " HP" : "the monster died!!");
 	}
 }

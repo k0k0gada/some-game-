@@ -65,7 +65,7 @@ public class Hero {
 
 		this.boots = new Boots("galoshes");
 		this.boots.setDefInc(1);
-		this.boots.setSpeedInc(-5);
+		this.boots.setSpeedInc(-10);
 		this.boots.setMaxHPInc(2);
 		this.itemSet.add(this.boots);
 
@@ -114,8 +114,11 @@ public class Hero {
 		for (Item item : itemSet) {
 			tempSp += item.getSpeedInc();
 		}
-		return (100 - (this.attackSpeed - tempSp));
-
+		if (this.attackSpeed - tempSp < 1) {
+			return 1;
+		} else {
+			return (this.attackSpeed - tempSp);
+		}
 	}
 
 	int getMAXHP() {
@@ -165,16 +168,12 @@ public class Hero {
 		s = s + "\n";
 		s = s + "hero's stats(hero's stats + item bonuses):";
 		s = s + "\n";
-		// int tempSp = 0;
-		// for (Item item : itemList) {
-		// tempSp += item.getSpeedInc();
-		// }
 		s = s + "dmg: " + this.getAllDMG() + " (" + this.dmg + " + " + (this.getAllDMG() - this.dmg) + ")"
 				+ "\t dmg reduction: " + this.getAllDef() + " (" + this.defence + " + "
 				+ (this.getAllDef() - this.defence) + ")" + "\tspeed="
-				+ (100 - ((this.attackSpeed - (this.getALLAttackSpeed() - this.attackSpeed) < 1) ? 100
-						: (this.attackSpeed - (this.getALLAttackSpeed() - this.attackSpeed))))
-				+ "(" + (100 - this.attackSpeed) + " + " + (this.getALLAttackSpeed() - this.attackSpeed) + ")";
+				+ ((this.getALLAttackSpeed() == 1) ? "100=MAX SPEED"
+						: (100 - this.getALLAttackSpeed()) + "(" + (100 - this.attackSpeed) + " + "
+								+ (this.attackSpeed - this.getALLAttackSpeed()) + ")");
 		s = s + "\n";
 		int tempCS = 0;// crit chance
 		for (Item item : itemSet) {
@@ -290,9 +289,30 @@ public class Hero {
 	}
 
 	public void takeDMG(int dmg) {
-		this.HP = this.HP - (dmg - this.getAllDef());
-		System.out.println("the hero took " + (dmg - this.getAllDef()) + " dmg");
-		System.out.println(this.isAlive() ? "the hero still has " + this.HP + " HP" : " the hero died");
+		if (Main.randomNumTo100() > 79) {
+			System.out.println("the hero dodged! ");
+		} else {
+			if (dmg - this.getAllDef() > 1) {
+				this.HP = this.HP - (dmg - this.getAllDef());
+				System.out.println("the hero took " + (dmg - this.getAllDef()) + " dmg");
+			} else {
+				this.HP--;
+				System.out.println("the hero took 1 dmg");
+			}
+		}
+		System.out.println(this.isAlive() ? "the hero still has " + this.HP + " HP" : "the hero died");
+	}
+
+	private int CalculateCritAndFluctuating() {
+		// critical..
+		int dmg;
+		dmg = this.getAllDMG();
+		if (Main.randomNumTo100() < this.getCritChance()) {
+			dmg *= this.getCritMultiplier();
+			System.out.print("the hero critted!");
+		}
+		double fluctiuationDMG = 0.9 + (Main.randomNum() / 5);// +-10% dmg
+		return (int) (dmg * fluctiuationDMG);
 	}
 
 	public void fight(Monster enemy) {
@@ -305,16 +325,26 @@ public class Hero {
 			heroTurn--;
 			MonsterTurn--;
 			if (heroTurn == 0) {
-				System.out.println("the hero hits with " + this.getAllDMG() + " dmg");
-				this.enemy.takeDMG(this.getAllDMG());
 				heroTurn = this.getALLAttackSpeed();
-				System.out.println();
+				if (Main.randomNumTo100() < 20) {
+					System.out.println("the hero Missed!\n");
+				} else {
+					int dmg = this.CalculateCritAndFluctuating();
+					System.out.println("the hero hits with " + dmg + " dmg");
+					this.enemy.takeDMG(dmg);
+					System.out.println();
+				}
 			}
 			if (MonsterTurn == 0) {
-				System.out.println("the monster hits with " + this.enemy.getDmg() + " dmg");
-				this.takeDMG(this.enemy.getDmg());
 				MonsterTurn = this.enemy.getAttackSpeed();
-				System.out.println();
+				if (Main.randomNumTo100() < 20) {
+					System.out.println("the Monster Missed!\n");
+				} else {
+					int dmg = this.enemy.CalculateCritAndFluctuating();
+					System.out.println("the monster hits with " + dmg + " dmg");
+					this.takeDMG(dmg);
+					System.out.println();
+				}
 			}
 
 		} while (this.isAlive() && this.enemy.isAlive());

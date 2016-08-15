@@ -1,10 +1,15 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
 import characters.Hero;
+import monsters.BossMonsters;
 import monsters.EasyMonster;
+import monsters.HardMonsters;
+import monsters.MedMonster;
+import monsters.Monster;
 
 public class Main {
 	public static Scanner sc = new Scanner(System.in);
@@ -12,10 +17,11 @@ public class Main {
 
 	public static void main(String[] args) {
 		Hero hero = new Hero(setHeroName());
-		// System.out.println(hero.toString());
-		// System.out.println(hero.getItemSet().toString());
-		EasyMonster a = new EasyMonster(hero);
-		hero.fight(a);
+		ArrayList<Monster> monsters = new ArrayList<>();
+		do {
+
+		} while (true);
+
 	}
 
 	@SuppressWarnings("static-access")
@@ -52,4 +58,11 @@ public class Main {
 		return name;
 	}
 
+	static public int randomNumTo100() {
+		return rd.nextInt(100);
+	}
+
+	static public double randomNum() {
+		return rd.nextDouble();
+	}
 }
