@@ -8,11 +8,13 @@ import items.Boots;
 import items.Gloves;
 import items.Helmet;
 import items.Item;
+import items.Potion;
 import items.Weapon;
 import main.Main;
 import monsters.Monster;
 
 public class Hero {
+	private int MAX_AMOUNT_OF_POTIONS = 7;
 	private String name;
 	// level&gold
 	private int level;
@@ -39,6 +41,7 @@ public class Hero {
 	private Helmet helmet;
 
 	// inventory:
+	ArrayList<Potion> Potions = new ArrayList<>();
 	ArrayList<Item> inventory = new ArrayList<>();
 
 	// enemy
@@ -87,6 +90,10 @@ public class Hero {
 		if (this.HP < this.getMAXHP()) {
 			this.HP = this.getMAXHP();
 		}
+		for (Item item : itemSet) {
+			Main.allItems.add(item);
+		}
+
 	}
 
 	public int getLevel() {
@@ -239,7 +246,7 @@ public class Hero {
 		} else {
 			this.level++;
 			this.exp = 0;
-			this.expNeeded = this.level * 15;
+			this.expNeeded += this.level * 15;
 			System.out.println("CONGRATULATIONS YOU LEVELED UP! ");
 			getLevelUpBonus();
 			this.HP = this.MAXHP;
@@ -288,6 +295,22 @@ public class Hero {
 		return (this.HP > 0 ? true : false);
 	}
 
+	void usePotion(Potion p) {
+		int bonusHP = p.getHpInc();
+		if (this.HP >= this.MAXHP) {
+			System.out.println("Already at max HP! The potion was not used");
+			return;
+		}
+		if (this.HP + bonusHP < this.MAXHP) {
+			this.HP = this.HP + bonusHP;
+			System.out.println("the potion was used.Hero's HP is " + this.HP);
+		} else {
+			this.HP = this.MAXHP;
+			System.out.println("the potion heald the hero to MAX HP " + this.MAXHP);
+		}
+		this.Potions.remove(p);
+	}
+
 	public void takeDMG(int dmg) {
 		if (Main.randomNumTo100() > 79) {
 			System.out.println("the hero dodged! ");
@@ -330,22 +353,9 @@ public class Hero {
 			}
 			if (MonsterTurn == 0) {
 				MonsterTurn = this.enemy.getAttackSpeed();
-				if (Main.randomNumTo100() < 20) {
-					System.out.println("the Monster Missed!\n");
-				} else {
-					int dmg = this.enemy.CalculateCritAndFluctuating();
-					System.out.println("the monster hits with " + dmg + " dmg");
-					this.takeDMG(dmg);
-					System.out.println();
-				}
+				this.monstersFightTurn();
 			}
-			if (this.isAlive() != this.enemy.isAlive()) {
-				if (this.isAlive()) {
-					System.out.println("the hero won!");
-				} else {
-					System.out.println("the monster won!");
-				}
-			}
+			this.checkWonStatusOnFight();
 		} while (this.isAlive() && this.enemy.isAlive());
 	}
 
@@ -527,6 +537,24 @@ public class Hero {
 			System.out.println("the monster hits with " + dmg + " dmg");
 			this.takeDMG(dmg);
 			System.out.println();
+		}
+	}
+
+	void fightWonSpoils() {
+		int exp = this.enemy.giveEXP();
+		System.out.println("you gained " + exp + " exp!");
+		this.exp += exp;
+		this.checkLevelUp();
+		int coins = this.enemy.dropCoins();
+		System.out.println("the enemy dropped " + coins + " coins!");
+		this.coins += this.enemy.dropCoins();
+		Potion p = this.enemy.dropPotion();
+		System.out.println("the enemy dropped " + p.toString());
+		if (this.Potions.size() < MAX_AMOUNT_OF_POTIONS) {
+			System.out.println("You took that potion");
+			this.Potions.add(p);
+		} else {
+			System.out.println("your potion bag is full!");
 		}
 	}
 }

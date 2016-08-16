@@ -1,15 +1,20 @@
 package monsters;
 
 import characters.Hero;
+import items.Potion;
 import main.Main;
 
 public class HardMonsters extends Monster {
+
+	private final int EXP_DIFFICULTY_MODIFIER = 4;
+	private final int CHANCE_TO_DROP_MULTIPLE_POTIONS = 50;
+	private final double COIN_DIFICULTY_MODIFIER = 4;
 	// dif mod about ~ 3.5
-	final double HP_DMG_DIFFICULTY_MODIFIER = (3.3 + Main.rd.nextDouble());
-	final double DEF_DIFFICULTY_MODIFIER = (3.4 + Main.rd.nextDouble());
-	final int MAX_ATTACK_SPEED_MODIFIER = 15;
-	final int MAX_CRIT_CHANCE_MODIFIER = 55;
-	final double MAX_CRIT_MULTIPLIER_MODIFIER = 3;
+	private final double HP_DMG_DIFFICULTY_MODIFIER = (3.3 + Main.rd.nextDouble());
+	private final double DEF_DIFFICULTY_MODIFIER = (3.4 + Main.rd.nextDouble());
+	private final int MAX_ATTACK_SPEED_MODIFIER = 15;
+	private final int MAX_CRIT_CHANCE_MODIFIER = 55;
+	private final double MAX_CRIT_MULTIPLIER_MODIFIER = 3;
 
 	public HardMonsters(Hero enemy) {
 		super(enemy);
@@ -49,4 +54,29 @@ public class HardMonsters extends Monster {
 		this.setCritMultiplier(MAX_CRIT_MULTIPLIER_MODIFIER);
 	}
 
+	@Override
+	public int dropCoins() {
+		int dropCoins = super.dropCoins();
+		dropCoins *= COIN_DIFICULTY_MODIFIER;
+		return dropCoins;
+	}
+
+	@Override
+	public Potion dropPotion() {
+		Potion p = super.dropPotion();
+		int amount = 1;
+		for (int i = 0; i < COIN_DIFICULTY_MODIFIER; i++) {
+			if (Main.randomNumTo100() < CHANCE_TO_DROP_MULTIPLE_POTIONS) {
+				amount++;
+			}
+		}
+		p.setAmount(amount);
+		return p;
+
+	}
+
+	@Override
+	public int giveEXP() {
+		return super.giveEXP() * EXP_DIFFICULTY_MODIFIER;
+	}
 }

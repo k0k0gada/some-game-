@@ -1,9 +1,14 @@
 package monsters;
 
 import characters.Hero;
+import items.Potion;
 import main.Main;
 
 public abstract class Monster {
+	private final int EXP_PER_LEVEL = 4;
+	private final int HP_MINIMUM_HEAL = 30;
+	private final int HP_HEAL_PER_LEVEL = 9;
+	private final int DROP_COINS_AMOUNT = 12;
 	static int counter = 0;
 	final int MIN_HP = 20;
 	final int MIN_DMG = 7;
@@ -160,6 +165,24 @@ public abstract class Monster {
 			}
 		}
 		System.out.println(this.isAlive() ? "the monster still has " + this.HP + " HP" : "the monster died!!");
+	}
+
+	public int dropCoins() {
+		int coinsAmount = 0;
+		coinsAmount = Main.randomNumTo100() + this.level * DROP_COINS_AMOUNT;
+		return coinsAmount;
+	}
+
+	public Potion dropPotion() {
+		int hp = 0;
+		hp = HP_MINIMUM_HEAL + this.level * HP_HEAL_PER_LEVEL;
+		return new Potion(hp);
+	}
+
+	public int giveEXP() {
+		int exp = 0;
+		exp = this.level * EXP_PER_LEVEL;
+		return exp;
 	}
 
 }

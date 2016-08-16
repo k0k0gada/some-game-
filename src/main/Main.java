@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import characters.Hero;
+import items.Item;
 import monsters.BossMonsters;
 import monsters.EasyMonsters;
 import monsters.HardMonsters;
@@ -12,7 +13,8 @@ import monsters.MedMonsters;
 import monsters.Monster;
 
 public class Main {
-	static ArrayList<Monster> monsters = new ArrayList<>();
+	public static ArrayList<Item> allItems = new ArrayList<>();
+	public static ArrayList<Monster> monsters = new ArrayList<>();
 	public static Scanner sc = new Scanner(System.in);
 	public static Random rd = new Random();
 

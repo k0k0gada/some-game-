@@ -21,6 +21,21 @@ public class Item {
 		this.maxHPInc = 0;
 	}
 
+	Item() {
+		this.name = "item" + counter;
+		countInc();
+		this.attackInc = 0;
+		this.speedInc = 0;
+		this.defInc = 0;
+		this.critChanceInc = 0;
+		this.critMultiplierInc = 0;
+		this.maxHPInc = 0;
+	}
+
+	private static void countInc() {
+		Item.counter++;
+	}
+
 	public String getName() {
 		return name;
 	}
