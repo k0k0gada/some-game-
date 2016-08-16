@@ -100,6 +100,10 @@ public abstract class Monster {
 		return dmg;
 	}
 
+	public int getHP() {
+		return HP;
+	}
+
 	public int getDefence() {
 		return defence;
 	}
@@ -157,4 +161,5 @@ public abstract class Monster {
 		}
 		System.out.println(this.isAlive() ? "the monster still has " + this.HP + " HP" : "the monster died!!");
 	}
+
 }

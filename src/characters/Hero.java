@@ -325,15 +325,8 @@ public class Hero {
 			heroTurn--;
 			MonsterTurn--;
 			if (heroTurn == 0) {
-				heroTurn = this.getALLAttackSpeed();
-				if (Main.randomNumTo100() < 20) {
-					System.out.println("the hero Missed!\n");
-				} else {
-					int dmg = this.CalculateCritAndFluctuating();
-					System.out.println("the hero hits with " + dmg + " dmg");
-					this.enemy.takeDMG(dmg);
-					System.out.println();
-				}
+				chooseFightOptions(enemy, (MonsterTurn + 1));
+				break;
 			}
 			if (MonsterTurn == 0) {
 				MonsterTurn = this.enemy.getAttackSpeed();
@@ -346,10 +339,194 @@ public class Hero {
 					System.out.println();
 				}
 			}
-
+			if (this.isAlive() != this.enemy.isAlive()) {
+				if (this.isAlive()) {
+					System.out.println("the hero won!");
+				} else {
+					System.out.println("the monster won!");
+				}
+			}
 		} while (this.isAlive() && this.enemy.isAlive());
-		if (this.isAlive()) {
-			System.out.println("the hero won!");
+	}
+
+	private void chooseFightOptions(Monster enemy, int monsterTurnMeter) {
+		System.out.println("hero HP :" + this.HP + "\t\t Monster hp:" + this.enemy.getHP());
+		System.out.println("1=fight till end;2=fight 5 rounds ;3=run(70 % success);else=fight 1 round");
+		String s = Main.sc.nextLine();
+		String[] options = { "1", "2", "3", "0" };
+		for (int i = 0; i < options.length; i++) {
+			if (s.startsWith(options[i])) {
+				s = options[i];
+				break;
+			}
+			if (i == options.length - 1) {
+				s = "0";
+			}
+		}
+		switch (s) {
+		case "1":
+			fightTillEnd(enemy, monsterTurnMeter);
+			break;
+		case "2":
+			fightFiveTurns(enemy, monsterTurnMeter);
+			break;
+		case "3":
+			tryToRun(enemy, monsterTurnMeter);
+			break;
+		case "0":
+			fightOneRound(enemy, monsterTurnMeter);
+			break;
+		}
+
+	}
+
+	private void fightOneRound(Monster enemy, int monsterTurnMeter) {
+		int heroTurn = 1;
+		int monsterTurn = monsterTurnMeter;
+		int cnt = 0;
+		do {
+			heroTurn--;
+			monsterTurn--;
+			if (heroTurn == 0) {
+				if (cnt == 1) {
+					this.chooseFightOptions(enemy, monsterTurn + 1);
+					break;
+				}
+				cnt++;
+				heroTurn = this.getALLAttackSpeed();
+				if (Main.randomNumTo100() < 20) {
+					System.out.println("the hero Missed!\n");
+				} else {
+					int dmg = this.CalculateCritAndFluctuating();
+					System.out.println("the hero hits with " + dmg + " dmg");
+					this.enemy.takeDMG(dmg);
+					System.out.println();
+				}
+
+			}
+			if (monsterTurn == 0) {
+				monsterTurn = this.enemy.getAttackSpeed();
+				this.monstersFightTurn();
+			}
+			this.checkWonStatusOnFight();
+		} while (this.isAlive() && this.enemy.isAlive());
+	}
+
+	private void tryToRun(Monster enemy, int monsterTurnMeter) {
+		int heroTurn = 1;
+		int monsterTurn = monsterTurnMeter;
+		int cnt = 0;
+		do {
+			heroTurn--;
+			monsterTurn--;
+			if (heroTurn == 0) {
+				if (cnt == 1) {
+					this.chooseFightOptions(enemy, monsterTurn + 1);
+					break;
+				}
+				cnt++;
+				heroTurn = this.getALLAttackSpeed();
+				if (Main.randomNumTo100() < 70) {
+					System.out.println("the hero escaped succesfully !!");
+					this.enemy = null;
+					Main.chooseOption(this);
+					break;
+				}
+				System.out.println("the hero couldn't escape,the dmg for this round is halved!");
+				if (Main.randomNumTo100() < 20) {
+					System.out.println("the hero Missed!\n");
+				} else {
+					int dmg = this.CalculateCritAndFluctuating() / 2;
+					System.out.println("the hero hits with " + dmg + " dmg");
+					this.enemy.takeDMG(dmg);
+					System.out.println();
+				}
+
+			}
+			if (monsterTurn == 0) {
+				monsterTurn = this.enemy.getAttackSpeed();
+				this.monstersFightTurn();
+			}
+			this.checkWonStatusOnFight();
+		} while (this.isAlive() && this.enemy.isAlive());
+
+	}
+
+	private void fightFiveTurns(Monster enemy, int monsterTurnMeter) {
+		int heroTurn = 1;
+		int monsterTurn = monsterTurnMeter;
+		int counter = 0;
+		do {
+			heroTurn--;
+			monsterTurn--;
+			if (heroTurn == 0) {
+				counter++;
+				if (counter == 6) {
+					chooseFightOptions(enemy, monsterTurn + 1);
+					break;
+				}
+				heroTurn = this.getALLAttackSpeed();
+				if (Main.randomNumTo100() < 20) {
+					System.out.println("the hero Missed!\n");
+				} else {
+					int dmg = this.CalculateCritAndFluctuating();
+					System.out.println("the hero hits with " + dmg + " dmg");
+					this.enemy.takeDMG(dmg);
+					System.out.println();
+				}
+
+			}
+			if (monsterTurn == 0) {
+				monsterTurn = this.enemy.getAttackSpeed();
+				this.monstersFightTurn();
+			}
+			this.checkWonStatusOnFight();
+		} while (this.isAlive() && this.enemy.isAlive());
+	}
+
+	private void fightTillEnd(Monster enemy, int MonsterTurnMeter) {
+		int heroTurn = 1;
+		int monsterTurn = MonsterTurnMeter;
+		do {
+			heroTurn--;
+			monsterTurn--;
+			if (heroTurn == 0) {
+				heroTurn = this.getALLAttackSpeed();
+				if (Main.randomNumTo100() < 20) {
+					System.out.println("the hero Missed!\n");
+				} else {
+					int dmg = this.CalculateCritAndFluctuating();
+					System.out.println("the hero hits with " + dmg + " dmg");
+					this.enemy.takeDMG(dmg);
+					System.out.println();
+				}
+			}
+			if (monsterTurn == 0) {
+				monsterTurn = this.enemy.getAttackSpeed();
+				this.monstersFightTurn();
+			}
+			this.checkWonStatusOnFight();
+		} while (this.isAlive() && this.enemy.isAlive());
+	}
+
+	void checkWonStatusOnFight() {
+		if (this.isAlive() != this.enemy.isAlive()) {
+			if (this.isAlive()) {
+				System.out.println("the hero won!\n");
+			} else {
+				System.out.println("the monster won!\n");
+			}
+		}
+	}
+
+	void monstersFightTurn() {
+		if (Main.randomNumTo100() < 20) {
+			System.out.println("the Monster Missed!\n");
+		} else {
+			int dmg = this.enemy.CalculateCritAndFluctuating();
+			System.out.println("the monster hits with " + dmg + " dmg");
+			this.takeDMG(dmg);
+			System.out.println();
 		}
 	}
 }

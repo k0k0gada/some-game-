@@ -31,15 +31,21 @@ public class Main {
 		}
 	}
 
-	private static void chooseOption(Hero hero) {
-		String s;
+	public static void chooseOption(Hero hero) {
+		Scanner sc = new Scanner(System.in);
 		System.out.println("what will you do? ");
-		System.out.println("1=go fight");
+		System.out.println("1=go fight;0=get hero info");
 		System.out.println("enter your choice now:");
-		s = sc.nextLine();
+		String s = sc.nextLine();
 		switch (s.charAt(0)) {
 		case '1':
-			ChooseEnemy(hero);
+			Monster m = ChooseEnemy(hero);
+			if (m != null) {
+				hero.fight(m);
+			}
+			break;
+		case '0':
+			System.out.println(hero.toString());
 			break;
 		default:
 			System.out.println("wrong choice!CHOOSE AGAIN!");
@@ -49,6 +55,7 @@ public class Main {
 	}
 
 	private static Monster ChooseEnemy(Hero hero) {
+		Scanner scanner = new Scanner(System.in);
 		String s;
 		Monster m = null;
 		int moreLevels = 1 + Main.rd.nextInt(2);
@@ -58,9 +65,9 @@ public class Main {
 					"easy/medium/hard/BOSS\t  !THERE IS ALWAYS 3 % chance to get a boss and 1 % to get ultimate BOSS!\n"
 							+ " AND 7 % chance to get other kind of monster ");
 			System.out.println("e=easy;m=medium;h=hard;b=boss;se=stronger easy;sm=stronger medium;\nsh=stronger hard;"
-					+ "sb=stronger BOSS;0=back");
+					+ "sb=stronger BOSS;0=back\n");
 			String[] options = { "e", "m", "h", "b", "se", "sm", "sh", "sb" };
-			s = sc.nextLine();
+			s = scanner.nextLine();
 
 			if (s.startsWith("0")) {
 				chooseOption(hero);
