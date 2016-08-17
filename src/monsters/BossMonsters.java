@@ -77,7 +77,11 @@ public class BossMonsters extends Monster {
 				amount++;
 			}
 		}
-		p.setAmount(amount);
+		if (amount > 0) {
+			p.setAmount(amount);
+		} else {
+			p = null;
+		}
 		return p;
 
 	}

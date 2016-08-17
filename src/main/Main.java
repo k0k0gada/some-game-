@@ -36,15 +36,18 @@ public class Main {
 	public static void chooseOption(Hero hero) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("what will you do? ");
-		System.out.println("1=go fight;0=get hero info");
+		System.out.println("1=go fight;h=use potion;0=get hero info");
 		System.out.println("enter your choice now:");
-		String s = sc.nextLine();
+		String s = new String(sc.nextLine());
 		switch (s.charAt(0)) {
 		case '1':
 			Monster m = ChooseEnemy(hero);
 			if (m != null) {
 				hero.fight(m);
 			}
+			break;
+		case 'h':
+			hero.choosePotionToUse();
 			break;
 		case '0':
 			System.out.println(hero.toString());

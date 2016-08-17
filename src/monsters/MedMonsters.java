@@ -6,7 +6,7 @@ import main.Main;
 
 public class MedMonsters extends Monster {
 
-	private  final int EXP_DIFFICULTY_MODIFIER = 2;
+	private final int EXP_DIFFICULTY_MODIFIER = 2;
 	private final int CHANCE_TO_DROP_MULTIPLE_POTIONS = 50;
 	private final double COIN_DIFICULTY_MODIFIER = 2;
 	// dif mod about~ 1.5
@@ -70,7 +70,11 @@ public class MedMonsters extends Monster {
 				amount++;
 			}
 		}
-		p.setAmount(amount);
+		if (amount > 0) {
+			p.setAmount(amount);
+		} else {
+			p = null;
+		}
 		return p;
 
 	}

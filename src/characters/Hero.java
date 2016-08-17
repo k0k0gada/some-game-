@@ -14,6 +14,7 @@ import main.Main;
 import monsters.Monster;
 
 public class Hero {
+	private final int POINTS_PER_LEVEL = 2;
 	private int MAX_AMOUNT_OF_POTIONS = 7;
 	private String name;
 	// level&gold
@@ -249,7 +250,6 @@ public class Hero {
 			this.expNeeded += this.level * 15;
 			System.out.println("CONGRATULATIONS YOU LEVELED UP! ");
 			getLevelUpBonus();
-			this.HP = this.MAXHP;
 			return true;
 		}
 	}
@@ -259,56 +259,72 @@ public class Hero {
 		System.out.println("what two stats would you like to increase ?");
 		System.out.println(
 				"1-max HP(+14);\t2-dmg(+2);\t3-def(+2);\n4-attack speed(+5);\t5-crit chance(+4%);\t6-crit multiplier(+0.15)");
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < POINTS_PER_LEVEL; i++) {
 			System.out.println("choose option:");
-			switch (Main.sc.nextInt()) {
-			case 1:
+			String s = Main.sc.nextLine();
+			switch (s.charAt(0)) {
+			case '1':
 				this.MAXHP += 14;
-				System.out.println("max hp increased to:" + this.MAXHP);
+				System.out.println("max hp increased to:" + this.getMAXHP());
 				break;
-			case 2:
+			case '2':
 				this.dmg += 2;
 				System.out.println("Hero's dmg increased to:" + this.dmg);
 				break;
-			case 3:
+			case '3':
 				this.defence += 2;
 				System.out.println("Hero's def increased to:" + this.defence);
 				break;
-			case 4:
+			case '4':
 				this.attackSpeed -= 5;
 				System.out.println("Attack speed increased to:" + (100 - this.attackSpeed));
 				break;
-			case 5:
+			case '5':
 				this.critChance += 4;
 				System.out.println("Critical chance increased to:" + this.critChance);
 				break;
-			case 6:
+			case '6':
 				this.critMultiplier += 0.15;
 				System.out.println("Critical multiplier increased to:" + this.critMultiplier);
 				break;
+			default:
+				i--;
+				break;
 			}
+			this.HP = this.getMAXHP();
 		}
 		System.out.println(this.toString());
 	}
 
 	public boolean isAlive() {
+
+		if (this.HP < 0) {
+			System.out.println("the hero's hp was " + this.HP);
+			this.HP = 0;
+		}
 		return (this.HP > 0 ? true : false);
 	}
 
 	void usePotion(Potion p) {
 		int bonusHP = p.getHpInc();
-		if (this.HP >= this.MAXHP) {
+		if (this.HP >= this.getMAXHP()) {
 			System.out.println("Already at max HP! The potion was not used");
 			return;
 		}
-		if (this.HP + bonusHP < this.MAXHP) {
+		if (this.HP + bonusHP < this.getMAXHP()) {
 			this.HP = this.HP + bonusHP;
 			System.out.println("the potion was used.Hero's HP is " + this.HP);
 		} else {
-			this.HP = this.MAXHP;
-			System.out.println("the potion heald the hero to MAX HP " + this.MAXHP);
+			this.HP = this.getMAXHP();
+			System.out.println("the potion heald the hero to MAX HP " + this.getMAXHP());
 		}
-		this.Potions.remove(p);
+		p.setAmount(p.getAmount() - 1);
+		if (p.getAmount() == 0) {
+			System.out.println("the potion can't be use any more.It's been removed");
+			this.Potions.remove(p);
+		} else {
+			System.out.println(p.toString());
+		}
 	}
 
 	public void takeDMG(int dmg) {
@@ -519,17 +535,18 @@ public class Hero {
 		} while (this.isAlive() && this.enemy.isAlive());
 	}
 
-	void checkWonStatusOnFight() {
+	private void checkWonStatusOnFight() {
 		if (this.isAlive() != this.enemy.isAlive()) {
 			if (this.isAlive()) {
 				System.out.println("the hero won!\n");
+				this.fightWonSpoils();
 			} else {
 				System.out.println("the monster won!\n");
 			}
 		}
 	}
 
-	void monstersFightTurn() {
+	private void monstersFightTurn() {
 		if (Main.randomNumTo100() < 20) {
 			System.out.println("the Monster Missed!\n");
 		} else {
@@ -549,12 +566,76 @@ public class Hero {
 		System.out.println("the enemy dropped " + coins + " coins!");
 		this.coins += this.enemy.dropCoins();
 		Potion p = this.enemy.dropPotion();
-		System.out.println("the enemy dropped " + p.toString());
-		if (this.Potions.size() < MAX_AMOUNT_OF_POTIONS) {
-			System.out.println("You took that potion");
-			this.Potions.add(p);
+		if (p != null) {
+			System.out.println("the enemy dropped " + p.toString());
+			if (this.Potions.size() < MAX_AMOUNT_OF_POTIONS) {
+				System.out.println("You took that potion");
+				this.Potions.add(p);
+			} else {
+				System.out.println("your potion bag is full!");
+				System.out.println("your potions:" + this.Potions.toString());
+				System.out.println("would you like to change one of them ?");
+				if (!yesNoDecision()) {
+					System.out.println("OK no new potions for you!");
+				} else {
+					System.out.println("which one would you like to change ?");
+					this.Potions.toString();
+					// for (int i = 0; i < this.Potions.size(); i++) {
+					// System.out.println((i + 1) + " = " +
+					// this.Potions.get(i).toString());
+					// }
+					System.out.println("choose now:");
+					String s = Main.sc.nextLine();
+					if (Character.isDigit(s.charAt(0))) {
+						/*
+						 * limits the max amount of potions to 9
+						 */
+						int i = Character.digit(s.charAt(0), 10);
+						if (i < this.Potions.size()) {
+							this.Potions.remove(i);
+							this.Potions.add(p);
+						}
+					} else {
+						System.out.println("you didn't choose a number from the list.the potion is discarded");
+					}
+				}
+			}
 		} else {
-			System.out.println("your potion bag is full!");
+			System.out.println("the enemy dropped no potion! ");
 		}
 	}
+
+	boolean yesNoDecision() {
+		char z = Main.sc.nextLine().charAt(0);
+		if (z == 'y' || z == 'Y') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public void choosePotionToUse() {
+		System.out.println("the hero's HP " + this.HP + "/" + this.getMAXHP());
+		System.out.println("potions:");
+		System.out.println(this.Potions.toString());
+		System.out.println("(e=exit)choose now:");
+		String s = new String(Main.sc.nextLine());
+		if (s.startsWith("e")) {
+			System.out.println("going back to main menu:");
+			System.out.println();
+			Main.chooseOption(this);
+			return;
+		}
+		if (Character.isDigit(s.charAt(0))) {
+			int i = Character.digit(s.charAt(0), 10) - 1;
+			if (i < this.Potions.size()) {
+				this.usePotion(this.Potions.get(i));
+			}
+		} else {
+			System.out.println("you didn't choose a number from the list.Choose again! ");
+			this.choosePotionToUse();
+			return;
+		}
+	}
+
 }

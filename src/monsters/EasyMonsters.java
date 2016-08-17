@@ -9,7 +9,7 @@ public class EasyMonsters extends Monster {
 	private final int CHANCE_TO_DROP_MULTIPLE_POTIONS = 50;
 	private final double COIN_DIFICULTY_MODIFIER = 1.2;
 	// dif mod about~ 0.5
-	private final double HP_DMG_DIFFICULTY_MODIFIER = (0.5 + Main.rd.nextDouble());
+	private final double HP_DMG_DIFFICULTY_MODIFIER = (0.5 + 0.70*Main.rd.nextDouble());
 	private final double DEF_DIFFICULTY_MODIFIER = (0.7 + Main.rd.nextDouble());
 	private final int MAX_ATTACK_SPEED_MODIFIER = 30;
 	private final int MAX_CRIT_CHANCE_MODIFIER = 35;
@@ -69,7 +69,11 @@ public class EasyMonsters extends Monster {
 				amount++;
 			}
 		}
-		p.setAmount(amount);
+		if (amount > 0) {
+			p.setAmount(amount);
+		} else {
+			p = null;
+		}
 		return p;
 
 	}
