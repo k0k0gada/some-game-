@@ -5,4 +5,9 @@ public class Boots extends Item {
 		super(name);
 		this.setType("boots");
 	}
+
+	public void upgradeBoots() {
+		// TODO Auto-generated method stub
+
+	}
 }

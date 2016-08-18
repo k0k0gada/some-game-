@@ -8,7 +8,7 @@ import main.Main;
 
 public class BossMonsters extends Monster {
 	private final int EXP_DIFFICULTY_MODIFIER = 8;
-	private final int CHANCE_TO_DROP_MULTIPLE_POTIONS = 50;
+	private final int CHANCE_TO_DROP_MULTIPLE_POTIONS = 60;
 	private final double COIN_DIFICULTY_MODIFIER = 8;
 	private final double HP_DMG_DIFFICULTY_MODIFIER = (8 + 3 * Main.rd.nextDouble());
 	private final double DEF_DIFFICULTY_MODIFIER = (6 + 3 * Main.rd.nextDouble());

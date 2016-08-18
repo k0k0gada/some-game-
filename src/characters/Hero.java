@@ -14,14 +14,18 @@ import main.Main;
 import monsters.Monster;
 
 public class Hero {
+	private final int MAX_CRIT_CHANCE = 90;
+	private final int CHANCE_TO_GAIN_SOME_STATS = 15;
 	private final int POINTS_PER_LEVEL = 2;
 	private int MAX_AMOUNT_OF_POTIONS = 7;
+	private final int MAX_ATTACK_SPEED = 1;
 	private String name;
-	// level&gold
+	// level&resource
 	private int level;
 	private int exp;
 	private int expNeeded;
 	private int coins;
+	private int gems;
 
 	// stats:
 	private int HP;
@@ -49,10 +53,13 @@ public class Hero {
 	Monster enemy;
 
 	public Hero(String name) {
+		// stats & res& exp
 		this.name = name;
 		this.level = 1;
 		this.expNeeded = this.level * 15;
 		this.exp = 0;
+		this.coins = 0;
+		this.gems = 0;
 		this.dmg = 10;
 		this.attackSpeed = 70;
 		this.defence = 4;
@@ -88,6 +95,7 @@ public class Hero {
 		this.wep.setCritChanceInc(40);
 		this.wep.setSpeedInc(30);
 		this.itemSet.add(this.wep);
+
 		if (this.HP < this.getMAXHP()) {
 			this.HP = this.getMAXHP();
 		}
@@ -97,8 +105,51 @@ public class Hero {
 
 	}
 
+	public Weapon getWep() {
+		return wep;
+	}
+
+	public Armor getArmor() {
+		return armor;
+	}
+
+	public Boots getBoots() {
+		return boots;
+	}
+
+	public Gloves getGloves() {
+		return gloves;
+	}
+
+	public Helmet getHelmet() {
+		return helmet;
+	}
+
 	public int getLevel() {
 		return level;
+	}
+
+	public void setAttackSpeed(int attackSpeed) {
+		if (attackSpeed < MAX_ATTACK_SPEED) {
+			this.attackSpeed = 1;
+			System.out.println("Hero reached max speed of 100");
+		} else {
+			this.attackSpeed = attackSpeed;
+			System.out.println("Hero's attackSpeed set to " + (100 - this.attackSpeed));
+		}
+	}
+
+	public void setCritChance(int critChance) {
+		if (critChance > MAX_CRIT_CHANCE) {
+			this.critChance = MAX_CRIT_CHANCE;
+			System.out.println("hero's crit chance is at it's max 95 % ");
+		} else if (critChance < 0) {
+			this.critChance = 0;
+			System.out.println("hero's crit chance changed to 0");
+		} else {
+			this.critChance = critChance;
+			System.out.println("hero's crit chance set to " + this.critChance + " %");
+		}
 	}
 
 	int getAllDMG() {
@@ -134,7 +185,6 @@ public class Hero {
 		for (Item item : itemSet) {
 			tempHP += item.getMaxHPInc();
 		}
-		checkHPmoreThanMaxHP();
 		return (this.MAXHP + tempHP);
 	}
 
@@ -198,12 +248,8 @@ public class Hero {
 	}
 
 	void checkHPmoreThanMaxHP() {
-		int tempHP = 0;
-		for (Item item : itemSet) {
-			tempHP += item.getMaxHPInc();
-		}
-		if (this.HP > (this.MAXHP + tempHP)) {
-			this.HP = this.MAXHP;
+		if (this.HP > this.getMAXHP()) {
+			this.HP = this.getMAXHP();
 		}
 	}
 
@@ -276,12 +322,14 @@ public class Hero {
 				System.out.println("Hero's def increased to:" + this.defence);
 				break;
 			case '4':
-				this.attackSpeed -= 5;
-				System.out.println("Attack speed increased to:" + (100 - this.attackSpeed));
+				int tempSP = this.attackSpeed - 5;
+				System.out.println("hero's current attack speed :" + (100 - this.attackSpeed));
+				this.setAttackSpeed(tempSP);
 				break;
 			case '5':
-				this.critChance += 4;
-				System.out.println("Critical chance increased to:" + this.critChance);
+				int tempCC = this.critChance + 4;
+				System.out.println("hero;s current crit chance: " + this.critChance);
+				this.setCritChance(tempCC);
 				break;
 			case '6':
 				this.critMultiplier += 0.15;
@@ -305,7 +353,7 @@ public class Hero {
 		return (this.HP > 0 ? true : false);
 	}
 
-	void usePotion(Potion p) {
+	void usePotion(Potion p, int n) {
 		int bonusHP = p.getHpInc();
 		if (this.HP >= this.getMAXHP()) {
 			System.out.println("Already at max HP! The potion was not used");
@@ -321,7 +369,7 @@ public class Hero {
 		p.setAmount(p.getAmount() - 1);
 		if (p.getAmount() == 0) {
 			System.out.println("the potion can't be use any more.It's been removed");
-			this.Potions.remove(p);
+			this.Potions.remove(n);
 		} else {
 			System.out.println(p.toString());
 		}
@@ -364,7 +412,7 @@ public class Hero {
 			heroTurn--;
 			MonsterTurn--;
 			if (heroTurn == 0) {
-				chooseFightOptions(enemy, (MonsterTurn + 1));
+				chooseFightOptions(enemy, (MonsterTurn + 1), (heroTurn + 1));
 				break;
 			}
 			if (MonsterTurn == 0) {
@@ -375,11 +423,12 @@ public class Hero {
 		} while (this.isAlive() && this.enemy.isAlive());
 	}
 
-	private void chooseFightOptions(Monster enemy, int monsterTurnMeter) {
+	private void chooseFightOptions(Monster enemy, int monsterTurnMeter, int heroTurnMeter) {
 		System.out.println("hero HP :" + this.HP + "\t\t Monster hp:" + this.enemy.getHP());
-		System.out.println("1=fight till end;2=fight 5 rounds ;3=run(70 % success);else=fight 1 round");
+		System.out.println("1=fight till end;2=fight 5 rounds ;3=run(70 % success);h=use potion;else=fight 1 round");
 		String s = Main.sc.nextLine();
-		String[] options = { "1", "2", "3", "0" };
+		s = s.toLowerCase();
+		String[] options = { "1", "2", "3", "h", "0" };
 		for (int i = 0; i < options.length; i++) {
 			if (s.startsWith(options[i])) {
 				s = options[i];
@@ -391,23 +440,26 @@ public class Hero {
 		}
 		switch (s) {
 		case "1":
-			fightTillEnd(enemy, monsterTurnMeter);
+			fightTillEnd(enemy, monsterTurnMeter, heroTurnMeter);
 			break;
 		case "2":
-			fightFiveTurns(enemy, monsterTurnMeter);
+			fightFiveTurns(enemy, monsterTurnMeter, heroTurnMeter);
 			break;
 		case "3":
-			tryToRun(enemy, monsterTurnMeter);
+			tryToRun(enemy, monsterTurnMeter, heroTurnMeter);
 			break;
 		case "0":
-			fightOneRound(enemy, monsterTurnMeter);
+			fightOneRound(enemy, monsterTurnMeter, heroTurnMeter);
+			break;
+		case "h":
+			this.choosePotionToUseDuringCombat(monsterTurnMeter, heroTurnMeter);
 			break;
 		}
 
 	}
 
-	private void fightOneRound(Monster enemy, int monsterTurnMeter) {
-		int heroTurn = 1;
+	private void fightOneRound(Monster enemy, int monsterTurnMeter, int heroTurnMeter) {
+		int heroTurn = heroTurnMeter;
 		int monsterTurn = monsterTurnMeter;
 		int cnt = 0;
 		do {
@@ -415,7 +467,7 @@ public class Hero {
 			monsterTurn--;
 			if (heroTurn == 0) {
 				if (cnt == 1) {
-					this.chooseFightOptions(enemy, monsterTurn + 1);
+					this.chooseFightOptions(enemy, monsterTurn + 1, heroTurn + 1);
 					break;
 				}
 				cnt++;
@@ -438,8 +490,8 @@ public class Hero {
 		} while (this.isAlive() && this.enemy.isAlive());
 	}
 
-	private void tryToRun(Monster enemy, int monsterTurnMeter) {
-		int heroTurn = 1;
+	private void tryToRun(Monster enemy, int monsterTurnMeter, int heroTurnMeter) {
+		int heroTurn = heroTurnMeter;
 		int monsterTurn = monsterTurnMeter;
 		int cnt = 0;
 		do {
@@ -447,7 +499,7 @@ public class Hero {
 			monsterTurn--;
 			if (heroTurn == 0) {
 				if (cnt == 1) {
-					this.chooseFightOptions(enemy, monsterTurn + 1);
+					this.chooseFightOptions(enemy, monsterTurn + 1, heroTurn + 1);
 					break;
 				}
 				cnt++;
@@ -478,8 +530,8 @@ public class Hero {
 
 	}
 
-	private void fightFiveTurns(Monster enemy, int monsterTurnMeter) {
-		int heroTurn = 1;
+	private void fightFiveTurns(Monster enemy, int monsterTurnMeter, int heroTurnMeter) {
+		int heroTurn = heroTurnMeter;
 		int monsterTurn = monsterTurnMeter;
 		int counter = 0;
 		do {
@@ -488,7 +540,7 @@ public class Hero {
 			if (heroTurn == 0) {
 				counter++;
 				if (counter == 6) {
-					chooseFightOptions(enemy, monsterTurn + 1);
+					chooseFightOptions(enemy, monsterTurn + 1, heroTurn + 1);
 					break;
 				}
 				heroTurn = this.getALLAttackSpeed();
@@ -510,8 +562,8 @@ public class Hero {
 		} while (this.isAlive() && this.enemy.isAlive());
 	}
 
-	private void fightTillEnd(Monster enemy, int MonsterTurnMeter) {
-		int heroTurn = 1;
+	private void fightTillEnd(Monster enemy, int MonsterTurnMeter, int heroTurnMeter) {
+		int heroTurn = heroTurnMeter;
 		int monsterTurn = MonsterTurnMeter;
 		do {
 			heroTurn--;
@@ -574,23 +626,19 @@ public class Hero {
 			} else {
 				System.out.println("your potion bag is full!");
 				System.out.println("your potions:" + this.Potions.toString());
-				System.out.println("would you like to change one of them ?");
+				System.out.println("would you like to change one of them ?\ty/n?");
 				if (!yesNoDecision()) {
 					System.out.println("OK no new potions for you!");
 				} else {
 					System.out.println("which one would you like to change ?");
 					this.Potions.toString();
-					// for (int i = 0; i < this.Potions.size(); i++) {
-					// System.out.println((i + 1) + " = " +
-					// this.Potions.get(i).toString());
-					// }
 					System.out.println("choose now:");
 					String s = Main.sc.nextLine();
 					if (Character.isDigit(s.charAt(0))) {
 						/*
 						 * limits the max amount of potions to 9
 						 */
-						int i = Character.digit(s.charAt(0), 10);
+						int i = Character.digit(s.charAt(0), 10) - 1;
 						if (i < this.Potions.size()) {
 							this.Potions.remove(i);
 							this.Potions.add(p);
@@ -603,6 +651,56 @@ public class Hero {
 		} else {
 			System.out.println("the enemy dropped no potion! ");
 		}
+		if (Main.randomNumTo100() < CHANCE_TO_GAIN_SOME_STATS) {
+			System.out.println("Congrats! You learned something!!!");
+			addRandomAttribute();
+		}
+		int tempGems = this.enemy.dropGem();
+		System.out.println(
+				tempGems == 0 ? "The monster didn't drop any gems" : "The monster dropped " + tempGems + " gems ");
+		this.gems += tempGems;
+	}
+
+	private void addRandomAttribute() {
+		switch (Main.rd.nextInt(6)) {
+		case 0:// dmg
+			System.out.println("Had you had more dmg,you would have won faster ! ");
+			this.dmg++;
+			System.out.println(
+					"Your dmg increased by 1. Hero's dmg: " + this.dmg + " \t. Hero's total dmg : " + this.getAllDMG());
+			break;
+		case 1:// deff
+			System.out.println("Had you  had more def,you would have lost less HP !");
+			this.defence++;
+			System.out.println("Your def increased by 1. Hero's def : " + this.defence + " \t. Hero's total def: "
+					+ this.getAllDef());
+			break;
+		case 2:// attack speed
+			System.out.println("Had you been faster,you would have won faster ! ");
+			int tempSP = this.attackSpeed--;
+			System.out.println("Hero's speed is " + this.attackSpeed);
+			this.setAttackSpeed(tempSP);
+			break;
+		case 3:// crit chance
+			System.out.println("Had you managed some more criticals,you would have won faster ! ");
+			int tempCC = this.critChance + 1;
+			System.out.println("Hero's crit chance is " + this.critChance);
+			this.setCritChance(tempCC);
+			break;
+		case 4:// crit multiplier
+			System.out.println("Had you done more dmg per critical ,you would have won faster ! ");
+			this.critMultiplier += 0.05;
+			System.out.println("Your crit multiplier increased by 0.05 . Hero's crit multipleir : "
+					+ this.critMultiplier + " \t. Hero's total critMultiplier: " + this.getCritMultiplier());
+			break;
+		case 5:// HP
+			System.out.println("It's always good to have some more HP! ");
+			this.MAXHP += 2;
+			this.HP += 2;
+			System.out.println("Your max HP increased by 2 to: " + this.getMAXHP());
+			break;
+		}
+		System.out.println();
 	}
 
 	boolean yesNoDecision() {
@@ -620,6 +718,9 @@ public class Hero {
 		System.out.println(this.Potions.toString());
 		System.out.println("(e=exit)choose now:");
 		String s = new String(Main.sc.nextLine());
+		if (s == "" || s == null) {
+			s = "z";
+		}
 		if (s.startsWith("e")) {
 			System.out.println("going back to main menu:");
 			System.out.println();
@@ -629,11 +730,41 @@ public class Hero {
 		if (Character.isDigit(s.charAt(0))) {
 			int i = Character.digit(s.charAt(0), 10) - 1;
 			if (i < this.Potions.size()) {
-				this.usePotion(this.Potions.get(i));
+				this.usePotion(this.Potions.get(i), i);
 			}
 		} else {
 			System.out.println("you didn't choose a number from the list.Choose again! ");
 			this.choosePotionToUse();
+			return;
+		}
+	}
+
+	public void choosePotionToUseDuringCombat(int monsterTurnMeter, int heroTurnMeter) {
+		System.out.println("the hero's HP " + this.HP + "/" + this.getMAXHP());
+		System.out.println("potions:");
+		System.out.println(this.Potions.toString());
+		System.out.println("(r=return to combat)choose now:");
+		String s = new String(Main.sc.nextLine());
+		if (s.startsWith("r")) {
+			System.out.println("going back to combat menu:");
+			System.out.println();
+			this.chooseFightOptions(enemy, monsterTurnMeter, heroTurnMeter);
+			return;
+		}
+		if (Character.isDigit(s.charAt(0))) {
+			int i = Character.digit(s.charAt(0), 10) - 1;
+			if (i < this.Potions.size()) {
+				this.usePotion(this.Potions.get(i), i);
+				heroTurnMeter = this.getALLAttackSpeed();
+				this.chooseFightOptions(enemy, monsterTurnMeter, heroTurnMeter);
+			} else {
+				System.out.println("You didn't choose a number from the list.Choose again!");
+				this.choosePotionToUseDuringCombat(monsterTurnMeter, heroTurnMeter);
+			}
+
+		} else {
+			System.out.println("you didn't choose a number from the list.Choose again! ");
+			this.choosePotionToUseDuringCombat(monsterTurnMeter, heroTurnMeter);
 			return;
 		}
 	}

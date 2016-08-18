@@ -9,7 +9,10 @@ public abstract class Monster {
 	private final int HP_MINIMUM_HEAL = 30;
 	private final int HP_HEAL_PER_LEVEL = 9;
 	private final int DROP_COINS_AMOUNT = 12;
+	private final int CHANCE_TO_DROP_GEMS = 25;
+
 	static int counter = 0;
+
 	final int MIN_HP = 20;
 	final int MIN_DMG = 7;
 	final int MIN_DEF = 2;
@@ -136,8 +139,8 @@ public abstract class Monster {
 	@Override
 	public String toString() {
 		return "Monster [type=" + type + ", name=" + name + ", level=" + level + ", HP=" + HP + ", MAXHP=" + MAXHP
-				+ ", dmg=" + dmg + ", defence=" + defence + ", attackSpeed=" + attackSpeed + ", critChance="
-				+ critChance + ", critMultiplier=" + critMultiplier + "]";
+				+ ", dmg=" + dmg + ", defence=" + defence + ", attackSpeed=" + (100 - attackSpeed) + ", critChance="
+				+ critChance + ", critMultiplier=" + critMultiplier + "]\n";
 	}
 
 	public int CalculateCritAndFluctuating() {
@@ -185,4 +188,15 @@ public abstract class Monster {
 		return exp;
 	}
 
+	public int dropGem() {
+		int gems = 0;
+		int gems1;
+		do {
+			gems1 = gems;
+			if (Main.randomNumTo100() < CHANCE_TO_DROP_GEMS) {
+				gems++;
+			}
+		} while (gems1 != gems);
+		return gems;
+	}
 }

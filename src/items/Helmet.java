@@ -5,4 +5,9 @@ public class Helmet extends Item {
 		super(name);
 		this.setType("helmet");
 	}
+
+	public void upgradeHelmet() {
+		// TODO Auto-generated method stub
+		
+	}
 }

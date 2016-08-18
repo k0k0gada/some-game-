@@ -36,21 +36,35 @@ public class Main {
 	public static void chooseOption(Hero hero) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("what will you do? ");
-		System.out.println("1=go fight;h=use potion;0=get hero info");
+		System.out.println("f=go fight;h=use potion;u=upgrade Items;9=show all encountered monsters;i=get hero info");
+		String[] options = { "9", "f", "h", "u", "i" };
 		System.out.println("enter your choice now:");
 		String s = new String(sc.nextLine());
-		switch (s.charAt(0)) {
-		case '1':
+		s = s.toLowerCase();
+		for (int i = 0; i < options.length; i++) {
+			if (s.startsWith(options[i])) {
+				s = options[i];
+				break;
+			}
+		}
+		switch (s) {
+		case "f":
 			Monster m = ChooseEnemy(hero);
 			if (m != null) {
 				hero.fight(m);
 			}
 			break;
-		case 'h':
+		case "h":
 			hero.choosePotionToUse();
 			break;
-		case '0':
+		case "9":
+			System.out.println(monsters.toString());
+			break;
+		case "i":
 			System.out.println(hero.toString());
+			break;
+		case "u":
+			Item.upgradeItems(hero);
 			break;
 		default:
 			System.out.println("wrong choice!CHOOSE AGAIN!");
@@ -145,6 +159,9 @@ public class Main {
 			}
 			return m;
 		} else {
+			if (hero.getLevel() == 2) {
+				moreLevels = 1;
+			}
 			System.out.println("what would you like to look for ?");
 			System.out.println(
 					"easy/medium/hard/BOSS\t  !THERE IS ALWAYS 3 % chance to get a boss and 1 % to get ultimate BOSS!\n"
@@ -224,22 +241,22 @@ public class Main {
 				monsters.add(hbm);
 				break;
 			case "we":
-				EasyMonsters wem = new EasyMonsters(hero);
+				EasyMonsters wem = new EasyMonsters(hero, hero.getLevel() - moreLevels);
 				m = wem;
 				monsters.add(wem);
 				break;
 			case "wm":
-				MedMonsters wmm = new MedMonsters(hero);
+				MedMonsters wmm = new MedMonsters(hero, hero.getLevel() - moreLevels);
 				m = wmm;
 				monsters.add(wmm);
 				break;
 			case "wh":
-				HardMonsters whm = new HardMonsters(hero);
+				HardMonsters whm = new HardMonsters(hero, hero.getLevel() - moreLevels);
 				m = whm;
 				monsters.add(whm);
 				break;
 			case "wb":
-				BossMonsters wbm = new BossMonsters(hero);
+				BossMonsters wbm = new BossMonsters(hero, hero.getLevel() - moreLevels);
 				m = wbm;
 				monsters.add(wbm);
 				break;

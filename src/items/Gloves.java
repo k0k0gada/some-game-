@@ -7,4 +7,9 @@ public class Gloves extends Item {
 		this.setType("gloves");
 	}
 
+	public void upgradeGloves() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

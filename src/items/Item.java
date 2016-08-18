@@ -1,9 +1,14 @@
 package items;
 
+import characters.Hero;
+import main.Main;
+
 public class Item {
 	public static int counter = 0;
 	private String name;
 	private String type;
+	private int level;
+
 	private int attackInc;
 	private int defInc;
 	private int speedInc;
@@ -13,6 +18,7 @@ public class Item {
 
 	Item(String name) {
 		this.name = name;
+		this.level = 0;
 		this.attackInc = 0;
 		this.speedInc = 0;
 		this.defInc = 0;
@@ -24,6 +30,7 @@ public class Item {
 	Item() {
 		this.name = "item" + counter;
 		countInc();
+		this.level = 0;
 		this.attackInc = 0;
 		this.speedInc = 0;
 		this.defInc = 0;
@@ -151,4 +158,56 @@ public class Item {
 		return s;
 	}
 
+	void levelINC() {
+		this.level++;
+	}
+
+	public static void upgradeItems(Hero hero) {
+		System.out.println("choose item to upgrade:");
+		System.out.println("a=armor;b=boots;g=gloves;h=helmet;w=weapon;e=exit");
+		String[] options = { "a", "b", "g", "h", "w", "e" };
+		String s = Main.sc.nextLine();
+		{
+			boolean correctChoice = false;
+			for (int i = 0; i < options.length; i++) {
+				if (s.startsWith(options[i])) {
+					s = options[i];
+					correctChoice = true;
+					break;
+				}
+			}
+			if (!correctChoice) {
+				s = "gfd";
+			}
+		}
+		switch (s) {
+		case "a":
+			Armor a = hero.getArmor();
+			a.upgradeArmor(hero);
+			break;
+		case "b":
+			Boots b = hero.getBoots();
+			b.upgradeBoots();
+			break;
+		case "g":
+			Gloves g = hero.getGloves();
+			g.upgradeGloves();
+			break;
+		case "h":
+			Helmet h = hero.getHelmet();
+			h.upgradeHelmet();
+			break;
+		case "w":
+			Weapon w = hero.getWep();
+			w.upgradeWeapon();
+			break;
+		case "e":
+			Main.chooseOption(hero);
+			break;
+		default:
+			System.out.println("wrong choice!choose again");
+			upgradeItems(hero);
+			break;
+		}
+	}
 }
