@@ -59,7 +59,7 @@ public class Hero {
 		this.expNeeded = this.level * 15;
 		this.exp = 0;
 		this.coins = 0;
-		this.gems = 0;
+		this.gems = 1;
 		this.dmg = 10;
 		this.attackSpeed = 70;
 		this.defence = 4;
@@ -129,6 +129,22 @@ public class Hero {
 		return level;
 	}
 
+	public int getCoins() {
+		return coins;
+	}
+
+	public void setCoins(int coins) {
+		this.coins = coins;
+	}
+
+	public int getGems() {
+		return gems;
+	}
+
+	public void setGems(int gems) {
+		this.gems = gems;
+	}
+
 	public void setAttackSpeed(int attackSpeed) {
 		if (attackSpeed < MAX_ATTACK_SPEED) {
 			this.attackSpeed = 1;
@@ -193,7 +209,11 @@ public class Hero {
 		for (Item item : itemSet) {
 			tempCS += item.getCritChanceInc();
 		}
-		return (this.critChance + tempCS);
+		if (this.critChance + tempCS > this.MAX_CRIT_CHANCE) {
+			return this.MAX_CRIT_CHANCE;
+		} else {
+			return (this.critChance + tempCS);
+		}
 	}
 
 	public void setEnemy(Monster enemy) {
@@ -220,7 +240,7 @@ public class Hero {
 		s = s + "\n";
 		s = s + "exp/exp Neded: " + this.exp + "/" + this.expNeeded;
 		s = s + "\n";
-		s = s + "coins: " + this.coins;
+		s = s + "coins: " + this.coins + "\tgems: " + this.gems;
 		s = s + "\n";
 		s = s + "HP/MaxHP " + this.HP + "/" + this.getMAXHP();
 		s = s + "\n";
@@ -253,7 +273,7 @@ public class Hero {
 		}
 	}
 
-	void equipItem(Item item) {
+	void equipItem(Item item) {// looks like this will be useless
 		this.inventory.remove(item);// removes the item from the inventory
 		switch (item.getType()) {// what is the item ?
 		case "armor":
@@ -626,7 +646,7 @@ public class Hero {
 			} else {
 				System.out.println("your potion bag is full!");
 				System.out.println("your potions:" + this.Potions.toString());
-				System.out.println("would you like to change one of them ?\ty/n?");
+				System.out.println("would you like to change one of them ?");
 				if (!yesNoDecision()) {
 					System.out.println("OK no new potions for you!");
 				} else {
@@ -678,7 +698,7 @@ public class Hero {
 		case 2:// attack speed
 			System.out.println("Had you been faster,you would have won faster ! ");
 			int tempSP = this.attackSpeed--;
-			System.out.println("Hero's speed is " + this.attackSpeed);
+			System.out.println("Hero's speed is " + (100 - this.attackSpeed));
 			this.setAttackSpeed(tempSP);
 			break;
 		case 3:// crit chance
@@ -703,7 +723,8 @@ public class Hero {
 		System.out.println();
 	}
 
-	boolean yesNoDecision() {
+	public boolean yesNoDecision() {
+		System.out.println("y=yes;else=no;");
 		char z = Main.sc.nextLine().charAt(0);
 		if (z == 'y' || z == 'Y') {
 			return true;
@@ -718,25 +739,30 @@ public class Hero {
 		System.out.println(this.Potions.toString());
 		System.out.println("(e=exit)choose now:");
 		String s = new String(Main.sc.nextLine());
-		if (s == "" || s == null) {
-			s = "z";
-		}
+
 		if (s.startsWith("e")) {
 			System.out.println("going back to main menu:");
 			System.out.println();
 			Main.chooseOption(this);
 			return;
 		}
-		if (Character.isDigit(s.charAt(0))) {
-			int i = Character.digit(s.charAt(0), 10) - 1;
-			if (i < this.Potions.size()) {
-				this.usePotion(this.Potions.get(i), i);
+		if (s.length() > 0) {
+			if (Character.isDigit(s.charAt(0))) {
+				int i = Character.digit(s.charAt(0), 10) - 1;
+				if (i < this.Potions.size()) {
+					this.usePotion(this.Potions.get(i), i);
+				}
+			} else {
+				System.out.println("you didn't choose a number from the list.Choose again! ");
+				this.choosePotionToUse();
+				return;
 			}
 		} else {
 			System.out.println("you didn't choose a number from the list.Choose again! ");
 			this.choosePotionToUse();
 			return;
 		}
+
 	}
 
 	public void choosePotionToUseDuringCombat(int monsterTurnMeter, int heroTurnMeter) {

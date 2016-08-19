@@ -43,6 +43,18 @@ public class Item {
 		Item.counter++;
 	}
 
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -158,15 +170,16 @@ public class Item {
 		return s;
 	}
 
-	void levelINC() {
-		this.level++;
-	}
-
 	public static void upgradeItems(Hero hero) {
 		System.out.println("choose item to upgrade:");
+		System.out.println("prices:");
+		System.out.println(hero.getArmor().getCost());
+		System.out.println(hero.getBoots().getCost());
+		System.out.println(hero.getGloves().getCost());
 		System.out.println("a=armor;b=boots;g=gloves;h=helmet;w=weapon;e=exit");
 		String[] options = { "a", "b", "g", "h", "w", "e" };
 		String s = Main.sc.nextLine();
+		s = s.toLowerCase();
 		{
 			boolean correctChoice = false;
 			for (int i = 0; i < options.length; i++) {
@@ -187,19 +200,19 @@ public class Item {
 			break;
 		case "b":
 			Boots b = hero.getBoots();
-			b.upgradeBoots();
+			b.upgradeBoots(hero);
 			break;
 		case "g":
 			Gloves g = hero.getGloves();
-			g.upgradeGloves();
+			g.upgradeGloves(hero);
 			break;
 		case "h":
 			Helmet h = hero.getHelmet();
-			h.upgradeHelmet();
+			h.upgradeHelmet(hero);
 			break;
 		case "w":
 			Weapon w = hero.getWep();
-			w.upgradeWeapon();
+			w.upgradeWeapon(hero);
 			break;
 		case "e":
 			Main.chooseOption(hero);
