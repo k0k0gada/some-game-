@@ -39,7 +39,7 @@ public class City {
 				System.out.println("hero is at full hp!!");
 				break;
 			}
-			if (FREE_HEALS > 1) {
+			if (FREE_HEALS > 0) {
 				FREE_HEALS--;
 				System.out.println("healing hero to max HP");
 				hero.setHP(hero.getMAXHP());
@@ -86,7 +86,7 @@ public class City {
 				if (hero.getCoins() >= HEAL_PRICE) {
 					System.out.println("The hero paid " + HEAL_PRICE + " coins to heal himself ");
 					hero.payCoins(HEAL_PRICE);
-					System.out.println("hero's HP" + hero.getHP());
+					System.out.println("hero's HP :" + hero.getHP());
 					hero.setHP(hero.getHP() + 50);
 
 				} else {

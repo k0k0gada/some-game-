@@ -67,6 +67,19 @@ public abstract class Monster {
 		this.critMultiplier = this.MIN_CRIT_MULTIPLIER + this.MIN_CRIT_MULTIPLIER * this.level;
 	}
 
+	public Monster(int level) {
+		this.name = "monster" + counter;
+		countINC();
+		this.level = level;
+		this.MAXHP = this.MIN_HP + this.level * this.HP_PER_LEVEL;
+		this.HP = this.MAXHP;
+		this.dmg = this.MIN_DMG + this.DMG_PER_LEVEL * this.level;
+		this.defence = this.MIN_DEF + this.DEF_PER_LEVEL * this.level;
+		this.attackSpeed = 100 - this.ATTACK_SPEED_PER_LEVEL * this.level;
+		this.critChance = this.MIN_CRIT_CHANCE + this.CRIT_CHANCE_PER_LEVEL * this.level;
+		this.critMultiplier = this.MIN_CRIT_MULTIPLIER + this.MIN_CRIT_MULTIPLIER * this.level;
+	}
+
 	public void setHP(int hP) {
 		HP = hP;
 	}

@@ -841,16 +841,16 @@ public class Hero {
 		System.out.println("the hero paid " + gems + " gems.The hero now has: " + this.gems);
 	}
 
-	public boolean checkGameOver() {
+	public boolean checkGameOver(Hero hero) {
 		if (this.isAlive() == false) {
-			if (getCoins() < City.HEAL_PRICE) {
-				if (City.FREE_HEALS < 1) {
-					if (getGems() == 0) {
+			if (this.getCoins() < City.HEAL_PRICE) {
+				if (City.FREE_HEALS == 0) {
+					if (this.getGems() == 0) {
 						if (Potions.size() == 0) {
 							System.out.println("You are not alive!");
 							System.out.println("You have no more free heals!");
 							System.out.println("You don't have the money to heal!");
-							System.out.println("you don't have gems to sels in order to get money to heal!");
+							System.out.println("you don't have gems to sell in order to get money to heal!");
 							System.out.println("Your potion bag is empty!");
 							System.out.println("GAME OVER ");
 							return true;
@@ -866,5 +866,15 @@ public class Hero {
 		String s;
 		s = "There are some free heals in the city!\nThe marchant offers some heal for some 300 coins!\nHave some potions";
 		return s;
+	}
+
+	public void godmode() {// cheat
+		attackSpeed = MAX_ATTACK_SPEED;
+		critChance = MAX_CRIT_CHANCE;
+		critMultiplier = 25;
+		dmg = 500;
+		defence = 10000;
+		MAXHP = 50000;
+
 	}
 }

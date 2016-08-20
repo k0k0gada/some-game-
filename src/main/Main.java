@@ -11,6 +11,7 @@ import monsters.EasyMonsters;
 import monsters.HardMonsters;
 import monsters.MedMonsters;
 import monsters.Monster;
+import monsters.UltimateBoss;
 import places.City;
 
 public class Main {
@@ -18,6 +19,7 @@ public class Main {
 	public static ArrayList<Monster> monsters = new ArrayList<>();
 	public static Scanner sc = new Scanner(System.in);
 	public static Random rd = new Random();
+	public static BossMonsters ub = new UltimateBoss(50);// ub=ult boss
 
 	public static void main(String[] args) {
 		play();
@@ -26,12 +28,16 @@ public class Main {
 	static void play() {
 		System.out.println("would you like to create a hero ? ");
 		if (Hero.yesNoDecision()) {
+			monsters.add(ub);
 			Hero hero = new Hero(setHeroName());
-
 			do {
+				if (!ub.isAlive()) {
+					System.out.println("you win!");
+					break;
+				}
 				chooseOption(hero);
 
-			} while (!hero.checkGameOver());
+			} while (!hero.checkGameOver(hero));
 		} else {
 			System.out.println("you don't want ot play my game :( so SAD  :(  :(   \n BYE BYE !!");
 		}
@@ -41,10 +47,14 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("what will you do? ");
 		System.out.println(
-				"f=go fight;\th=use potion;\tu=upgrade Items;\tc=go to city;\tsi=show item info\n9=show all encountered monsters;\ti=get hero info;\trestart=restart");
-		String[] options = { "9", "f", "h", "u", "i", "si", "c", "restart" };
+				"f=go fight;\th=use potion;\tu=upgrade Items;\tc=go to city;\tsi=show item info\n9=show all encountered monsters;\ti=get hero info;\tlw=Look for the ultimate boss(he must be dead in order for you to win the game!);\trestart=restart");
+
+		String[] options = { "9", "f", "h", "u", "i", "si", "lw", "c", "restart" };
 		System.out.println("enter your choice now:");
 		String s = new String(sc.nextLine());
+		if (s.equals("godmode")) {
+			hero.godmode();
+		}
 		s = s.toLowerCase();
 		for (int i = 0; i < options.length; i++) {
 			if (s.startsWith(options[i])) {
@@ -77,6 +87,11 @@ public class Main {
 		case "c":
 			City.getCityMenu(hero);
 			break;
+		case "lw":
+			System.out.println(
+					"before fighting the ultimate boss you must first kill all monsters that eluded you so far");
+			questForUltimateBoss(hero);
+			break;
 		case "restart":
 			play();
 			break;
@@ -85,6 +100,20 @@ public class Main {
 			chooseOption(hero);
 			break;
 		}
+	}
+
+	private static void questForUltimateBoss(Hero hero) {
+		for (int i = monsters.size() - 1; i > -1; i--) {
+			if (i == 0) {
+				System.out.println("You met the ultimate boss:");
+				hero.fight(ub);
+			}
+			if (monsters.get(i).isAlive()) {
+				System.out.println("You meet :");
+				hero.fight(monsters.get(i));
+			}
+		}
+
 	}
 
 	private static Monster ChooseEnemy(Hero hero) {
@@ -106,11 +135,6 @@ public class Main {
 			}
 			int rd = Main.randomNumTo100();
 			if (rd == 69) {// if the number is 69 ,you get an ultimate boss
-
-				BossMonsters ub = new BossMonsters(hero, 30);// ub=ult boss
-				if (!monsters.contains(ub)) {
-					monsters.add(ub);
-				}
 				return ub;
 			}
 			if (rd == 23 || rd == 78) {
