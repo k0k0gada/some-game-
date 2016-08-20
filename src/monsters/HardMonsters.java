@@ -12,7 +12,7 @@ public class HardMonsters extends Monster {
 	// dif mod about ~ 3.5
 	private final double HP_DMG_DIFFICULTY_MODIFIER = (3.3 + Main.rd.nextDouble());
 	private final double DEF_DIFFICULTY_MODIFIER = (3.4 + Main.rd.nextDouble());
-	private final int MAX_ATTACK_SPEED_MODIFIER = 15;
+	private final int MAX_ATTACK_SPEED_MODIFIER = 25;
 	private final int MAX_CRIT_CHANCE_MODIFIER = 55;
 	private final double MAX_CRIT_MULTIPLIER_MODIFIER = 3;
 

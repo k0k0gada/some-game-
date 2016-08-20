@@ -17,10 +17,12 @@ public class Helmet extends Item {
 		int coins = hero.getCoins();
 		int gems = hero.getGems();
 		if (h.getLevel() < HELMET_CONSTANT_GEMS_NEEDED) {
-			if (coins > this.getCoinCost() && gems > this.getGemCost()) {
+			if (coins >= this.getCoinCost() && gems >= this.getGemCost()) {
 				System.out.println("upgrade is possible.Do you want to upgrade ? ");
-				if (hero.yesNoDecision()) {
+				if (Hero.yesNoDecision()) {
 					System.out.println(h.toString());
+					hero.payCoins(h.getCoinCost());
+					hero.payGems(h.getGemCost());
 					setHelmetLevelStats(h.getLevel() + 1);
 					System.out.println("new stats: ");
 					System.out.println(h.toString());
@@ -36,10 +38,12 @@ public class Helmet extends Item {
 				}
 			}
 		} else {
-			if (coins > getCoinCost() && gems >= getGemCost()) {
+			if (coins >= getCoinCost() && gems >= getGemCost()) {
 				System.out.println("upgrade is possible.Do you want to upgrade ? ");
-				if (hero.yesNoDecision()) {
+				if (Hero.yesNoDecision()) {
 					System.out.println(h.toString());
+					hero.payCoins(h.getCoinCost());
+					hero.payGems(h.getGemCost());
 					setHelmetLevelStats(h.getLevel() + 1);
 					System.out.println("new stats: ");
 					System.out.println(h.toString());
@@ -120,7 +124,7 @@ public class Helmet extends Item {
 			setCritMultiplierInc(0.2);
 			setAttackInc(0);
 			setSpeedInc(0);
-			setCritChanceInc(0.4);
+			setCritChanceInc(4);
 			break;
 		case 7:
 			setName("better wizard's Hat ");
@@ -200,7 +204,7 @@ public class Helmet extends Item {
 		String s;
 		int coins = this.getCoinCost();
 		int gems = this.getGemCost();
-		s = this.getType() +"coins cost:" + coins + "\tgems cost:" + gems;
+		s = this.getType() + " coins cost:" + coins + "\tgems cost:" + gems;
 		return s;
 	}
 }

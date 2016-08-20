@@ -11,6 +11,7 @@ import monsters.EasyMonsters;
 import monsters.HardMonsters;
 import monsters.MedMonsters;
 import monsters.Monster;
+import places.City;
 
 public class Main {
 	public static ArrayList<Item> allItems = new ArrayList<>();
@@ -19,15 +20,18 @@ public class Main {
 	public static Random rd = new Random();
 
 	public static void main(String[] args) {
-		System.out.println("would you like to create a hero ? y/n");
-		char z = sc.nextLine().charAt(0);
-		if (z == 'y' || z == 'Y') {
+		play();
+	}
+
+	static void play() {
+		System.out.println("would you like to create a hero ? ");
+		if (Hero.yesNoDecision()) {
 			Hero hero = new Hero(setHeroName());
 
 			do {
 				chooseOption(hero);
 
-			} while (true);
+			} while (!hero.checkGameOver());
 		} else {
 			System.out.println("you don't want ot play my game :( so SAD  :(  :(   \n BYE BYE !!");
 		}
@@ -36,8 +40,9 @@ public class Main {
 	public static void chooseOption(Hero hero) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("what will you do? ");
-		System.out.println("f=go fight;h=use potion;u=upgrade Items;9=show all encountered monsters;i=get hero info");
-		String[] options = { "9", "f", "h", "u", "i" };
+		System.out.println(
+				"f=go fight;\th=use potion;\tu=upgrade Items;\tc=go to city;\tsi=show item info\n9=show all encountered monsters;\ti=get hero info;\trestart=restart");
+		String[] options = { "9", "f", "h", "u", "i", "si", "c", "restart" };
 		System.out.println("enter your choice now:");
 		String s = new String(sc.nextLine());
 		s = s.toLowerCase();
@@ -54,6 +59,9 @@ public class Main {
 				hero.fight(m);
 			}
 			break;
+		case "si":
+			hero.showItemInfo();
+			break;
 		case "h":
 			hero.choosePotionToUse();
 			break;
@@ -65,6 +73,12 @@ public class Main {
 			break;
 		case "u":
 			Item.upgradeItems(hero);
+			break;
+		case "c":
+			City.getCityMenu(hero);
+			break;
+		case "restart":
+			play();
 			break;
 		default:
 			System.out.println("wrong choice!CHOOSE AGAIN!");
@@ -81,26 +95,25 @@ public class Main {
 		if (hero.getLevel() == 1) {
 			System.out.println("what would you like to look for ?");
 			System.out.println(
-					"easy/medium/hard/BOSS\t  !THERE IS ALWAYS 3 % chance to get a boss and 1 % to get ultimate BOSS!\n"
+					"easy/medium/hard/BOSS\t  !THERE IS ALWAYS 2 % chance to get a boss and 1 % to get ultimate BOSS!\n"
 							+ " AND 7 % chance to get other kind of monster ");
-			System.out.println("e=easy;m=medium;h=hard;b=boss;se=stronger easy;sm=stronger medium;\nsh=stronger hard;"
+			System.out.println("e=easy;m=medium;h=hard;b=boss;\tse=stronger easy;sm=stronger medium;\nsh=stronger hard;"
 					+ "sb=stronger BOSS;0=back\n");
 			String[] options = { "e", "m", "h", "b", "se", "sm", "sh", "sb" };
 			s = scanner.nextLine();
-
 			if (s.startsWith("0")) {
 				chooseOption(hero);
 			}
 			int rd = Main.randomNumTo100();
 			if (rd == 69) {// if the number is 69 ,you get an ultimate boss
 
-				BossMonsters ub = new BossMonsters(hero, 12);// ub=ult boss
+				BossMonsters ub = new BossMonsters(hero, 30);// ub=ult boss
 				if (!monsters.contains(ub)) {
 					monsters.add(ub);
 				}
 				return ub;
 			}
-			if (rd == 23 || rd == 54 || rd == 78) {
+			if (rd == 23 || rd == 78) {
 				BossMonsters nb = new BossMonsters(hero);// new boss
 				monsters.add(nb);
 				return nb;
@@ -113,6 +126,9 @@ public class Main {
 				if (s.startsWith(options[i])) {
 					s = options[i];
 					break;
+				}
+				if (i == options.length - 1) {
+					s = "kolko";
 				}
 			}
 			switch (s) {
@@ -164,10 +180,10 @@ public class Main {
 			}
 			System.out.println("what would you like to look for ?");
 			System.out.println(
-					"easy/medium/hard/BOSS\t  !THERE IS ALWAYS 3 % chance to get a boss and 1 % to get ultimate BOSS!\n"
+					"easy/medium/hard/BOSS\t  !THERE IS ALWAYS 2 % chance to get a boss and 1 % to get ultimate BOSS!\n"
 							+ " AND 7 % chance to get other kind of monster ");
-			System.out.println("e=easy;m=medium;h=hard;b=boss;se=stronger easy;sm=stronger medium;\nsh=stronger hard;"
-					+ "sb=stronger BOSS;\nwe=weaker easy;wm=weaker medium;wh=weaker hard;wb=weaker boss;0=back");
+			System.out.println("e=easy;m=medium;h=hard;b=boss;\tse=stronger easy;sm=stronger medium;\nsh=stronger hard;"
+					+ "sb=stronger BOSS;\twe=weaker easy;\nwm=weaker medium;wh=weaker hard;wb=weaker boss;0=back");
 
 			String[] options = { "e", "m", "h", "b", "se", "sm", "sh", "sb", "we", "wm", "wh", "wb" };
 
@@ -183,7 +199,7 @@ public class Main {
 				}
 				return ub;
 			}
-			if (rd == 23 || rd == 54 || rd == 78) {
+			if (rd == 23 || rd == 54) {
 				BossMonsters nb = new BossMonsters(hero);// new boss
 				monsters.add(nb);
 				return nb;

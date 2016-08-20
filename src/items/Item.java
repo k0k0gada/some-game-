@@ -3,7 +3,7 @@ package items;
 import characters.Hero;
 import main.Main;
 
-public class Item {
+abstract public class Item {
 	public static int counter = 0;
 	private String name;
 	private String type;
@@ -172,10 +172,11 @@ public class Item {
 
 	public static void upgradeItems(Hero hero) {
 		System.out.println("choose item to upgrade:");
+		System.out.println(hero.showCoinsAndGemsAmount());
 		System.out.println("prices:");
-		System.out.println(hero.getArmor().getCost());
-		System.out.println(hero.getBoots().getCost());
-		System.out.println(hero.getGloves().getCost());
+		for (Item item : hero.getItemSet()) {
+			System.out.println(item.getCost());
+		}
 		System.out.println("a=armor;b=boots;g=gloves;h=helmet;w=weapon;e=exit");
 		String[] options = { "a", "b", "g", "h", "w", "e" };
 		String s = Main.sc.nextLine();
@@ -223,4 +224,6 @@ public class Item {
 			break;
 		}
 	}
+
+	public abstract String getCost();
 }

@@ -11,7 +11,7 @@ public class EasyMonsters extends Monster {
 	// dif mod about~ 0.5
 	private final double HP_DMG_DIFFICULTY_MODIFIER = (0.5 + 0.70*Main.rd.nextDouble());
 	private final double DEF_DIFFICULTY_MODIFIER = (0.7 + Main.rd.nextDouble());
-	private final int MAX_ATTACK_SPEED_MODIFIER = 30;
+	private final int MAX_ATTACK_SPEED_MODIFIER = 45;
 	private final int MAX_CRIT_CHANCE_MODIFIER = 35;
 	private final double MAX_CRIT_MULTIPLIER_MODIFIER = 1.8;
 

@@ -12,7 +12,7 @@ public class MedMonsters extends Monster {
 	// dif mod about~ 1.5
 	private final double HP_DMG_DIFFICULTY_MODIFIER = (1.5 + Main.rd.nextDouble());
 	private final double DEF_DIFFICULTY_MODIFIER = (1.7 + Main.rd.nextDouble());
-	private final int MAX_ATTACK_SPEED_MODIFIER = 20;
+	private final int MAX_ATTACK_SPEED_MODIFIER = 35;
 	private final int MAX_CRIT_CHANCE_MODIFIER = 45;
 	private final double MAX_CRIT_MULTIPLIER_MODIFIER = 2.1;
 

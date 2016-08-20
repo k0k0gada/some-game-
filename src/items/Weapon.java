@@ -17,10 +17,12 @@ public class Weapon extends Item {
 		int coins = hero.getCoins();
 		int gems = hero.getGems();
 		if (w.getLevel() < WEAPON_CONSTANT_GEMS_NEEDED) {
-			if (coins > this.getCoinCost() && gems > this.getGemCost()) {
+			if (coins >= this.getCoinCost() && gems >= this.getGemCost()) {
 				System.out.println("upgrade is possible.Do you want to upgrade ? ");
-				if (hero.yesNoDecision()) {
+				if (Hero.yesNoDecision()) {
 					System.out.println(w.toString());
+					hero.payCoins(w.getCoinCost());
+					hero.payGems(w.getGemCost());
 					setWeaponLevelStats(w.getLevel() + 1);
 					System.out.println("new stats: ");
 					System.out.println(w.toString());
@@ -36,10 +38,12 @@ public class Weapon extends Item {
 				}
 			}
 		} else {
-			if (coins > this.getCoinCost() && gems >= this.getGemCost()) {
+			if (coins >= this.getCoinCost() && gems >= this.getGemCost()) {
 				System.out.println("upgrade is possible.Do you want to upgrade ? ");
-				if (hero.yesNoDecision()) {
+				if (Hero.yesNoDecision()) {
 					System.out.println(w.toString());
+					hero.payCoins(w.getCoinCost());
+					hero.payGems(w.getGemCost());
 					setWeaponLevelStats(w.getLevel() + 1);
 					System.out.println("new stats: ");
 					System.out.println(w.toString());
@@ -193,7 +197,7 @@ public class Weapon extends Item {
 		String s;
 		int coins = this.getCoinCost();
 		int gems = this.getGemCost();
-		s = this.getType() + "coins cost:" + coins + "\tgems cost:" + gems;
+		s = this.getType() + " coins cost:" + coins + "\tgems cost:" + gems;
 		return s;
 	}
 }

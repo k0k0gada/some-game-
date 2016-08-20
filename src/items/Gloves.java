@@ -17,10 +17,12 @@ public class Gloves extends Item {
 		int coins = hero.getCoins();
 		int gems = hero.getGems();
 		if (g.getLevel() < GLOVES_CONSTANT_GEMS_NEEDED) {
-			if (coins > getCoinCost() && gems > getGemCost()) {
+			if (coins >= getCoinCost() && gems >= getGemCost()) {
 				System.out.println("upgrade is possible.Do you want to upgrade ? ");
-				if (hero.yesNoDecision()) {
+				if (Hero.yesNoDecision()) {
 					System.out.println(g.toString());
+					hero.payCoins(g.getCoinCost());
+					hero.payGems(g.getGemCost());
 					setGlovesLevelStats(g.getLevel() + 1);
 					System.out.println("new stats: ");
 					System.out.println(g.toString());
@@ -36,10 +38,12 @@ public class Gloves extends Item {
 				}
 			}
 		} else {
-			if (coins >getCoinCost()&& gems >= getGemCost()) {
+			if (coins >= getCoinCost() && gems >= getGemCost()) {
 				System.out.println("upgrade is possible.Do you want to upgrade ? ");
-				if (hero.yesNoDecision()) {
+				if (Hero.yesNoDecision()) {
 					System.out.println(g.toString());
+					hero.payCoins(g.getCoinCost());
+					hero.payGems(g.getGemCost());
 					setGlovesLevelStats(g.getLevel() + 1);
 					System.out.println("new stats: ");
 					System.out.println(g.toString());
@@ -50,7 +54,7 @@ public class Gloves extends Item {
 				if (!(coins > getCoinCost())) {
 					System.out.println("not enough coins!");
 				}
-				if (!(gems >getGemCost())) {
+				if (!(gems > getGemCost())) {
 					System.out.println("not enough gems!");
 				}
 			}
@@ -197,7 +201,7 @@ public class Gloves extends Item {
 		String s;
 		int coins = this.getCoinCost();
 		int gems = this.getGemCost();
-		s = this.getType() +"coins cost:" + coins + "\tgems cost:" + gems;
+		s = this.getType() + " coins cost:" + coins + "\tgems cost:" + gems;
 		return s;
 	}
 

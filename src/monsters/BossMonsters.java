@@ -1,7 +1,5 @@
 package monsters;
 
-import java.util.ArrayList;
-
 import characters.Hero;
 import items.Potion;
 import main.Main;

@@ -35,4 +35,9 @@ public class Potion extends Item {
 		s = "Potion that heals " + this.hpInc + " HP.There are " + this.amount + " uses left!\n";
 		return s;
 	}
+
+	@Override
+	public String getCost() {
+		return null;
+	}
 }
