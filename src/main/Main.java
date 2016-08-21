@@ -32,7 +32,6 @@ public class Main {
 			Hero hero = new Hero(setHeroName());
 			do {
 				if (!ub.isAlive()) {
-					System.out.println("you win!");
 					break;
 				}
 				chooseOption(hero);
@@ -124,7 +123,7 @@ public class Main {
 		if (hero.getLevel() == 1) {
 			System.out.println("what would you like to look for ?");
 			System.out.println(
-					"easy/medium/hard/BOSS\t  !THERE IS ALWAYS 2 % chance to get a boss and 1 % to get ultimate BOSS!\n"
+					"easy/medium/hard/BOSS\t  \n!THERE IS ALWAYS 2 % chance to get a boss and 1 % to get ultimate BOSS!\n"
 							+ " AND 7 % chance to get other kind of monster ");
 			System.out.println("e=easy;m=medium;h=hard;b=boss;\tse=stronger easy;sm=stronger medium;\nsh=stronger hard;"
 					+ "sb=stronger BOSS;0=back\n");
@@ -306,7 +305,6 @@ public class Main {
 
 	}
 
-	@SuppressWarnings("static-access")
 	static String setHeroName() {
 		System.out.println("prepare to enter hero's name.");
 		System.out.println("minimum 3 characters long! Only letters; digits; and ',' ; '.' ; '-' ; '_' allowed");
@@ -323,7 +321,7 @@ public class Main {
 			}
 			for (int i = 0; i < name.length(); i++) {
 				Character c = name.charAt(i);
-				if (c.isLetterOrDigit(c)) {
+				if (Character.isLetterOrDigit(c)) {
 					continue;
 				} else {
 					if (c == ',' || c == '.' || c == '-' || c == '_') {

@@ -451,7 +451,7 @@ public class Hero {
 				chooseFightOptions(enemy, (MonsterTurn + 1), (heroTurn + 1));
 				break;
 			}
-			if (MonsterTurn == 0) {
+			if (MonsterTurn == 0 && this.enemy.isAlive()) {
 				MonsterTurn = this.enemy.getAttackSpeed();
 				this.monstersFightTurn();
 			}
@@ -518,7 +518,7 @@ public class Hero {
 				}
 
 			}
-			if (monsterTurn == 0) {
+			if (monsterTurn == 0 && this.enemy.isAlive()) {
 				monsterTurn = this.enemy.getAttackSpeed();
 				this.monstersFightTurn();
 			}
@@ -555,9 +555,8 @@ public class Hero {
 					this.enemy.takeDMG(dmg);
 					System.out.println();
 				}
-
 			}
-			if (monsterTurn == 0) {
+			if (monsterTurn == 0 && this.enemy.isAlive()) {
 				monsterTurn = this.enemy.getAttackSpeed();
 				this.monstersFightTurn();
 			}
@@ -588,9 +587,8 @@ public class Hero {
 					this.enemy.takeDMG(dmg);
 					System.out.println();
 				}
-
 			}
-			if (monsterTurn == 0) {
+			if (monsterTurn == 0 && this.enemy.isAlive()) {
 				monsterTurn = this.enemy.getAttackSpeed();
 				this.monstersFightTurn();
 			}
@@ -606,6 +604,7 @@ public class Hero {
 			monsterTurn--;
 			if (heroTurn == 0) {
 				heroTurn = this.getALLAttackSpeed();
+
 				if (Main.randomNumTo100() < 20) {
 					System.out.println("the hero Missed!\n");
 				} else {
@@ -615,7 +614,7 @@ public class Hero {
 					System.out.println();
 				}
 			}
-			if (monsterTurn == 0) {
+			if (monsterTurn == 0 && this.enemy.isAlive()) {
 				monsterTurn = this.enemy.getAttackSpeed();
 				this.monstersFightTurn();
 			}
@@ -627,6 +626,7 @@ public class Hero {
 		if (this.isAlive() != this.enemy.isAlive()) {
 			if (this.isAlive()) {
 				System.out.println("the hero won!\n");
+				System.out.println("hero still has  :" + this.HP + " HP");
 				this.fightWonSpoils();
 			} else {
 				System.out.println("the monster won!\n");
@@ -646,6 +646,11 @@ public class Hero {
 	}
 
 	void fightWonSpoils() {
+		if (!Main.ub.isAlive()) {
+			System.out.println("you win!");
+			Main.sc.close();
+			return;
+		}
 		int exp = this.enemy.giveEXP();
 		System.out.println("you gained " + exp + " exp!");
 		this.exp += exp;

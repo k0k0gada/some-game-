@@ -9,7 +9,7 @@ public abstract class Monster {
 	private final int HP_MINIMUM_HEAL = 30;
 	private final int HP_HEAL_PER_LEVEL = 9;
 	private final int DROP_COINS_AMOUNT = 12;
-	private final int CHANCE_TO_DROP_GEMS = 40;
+	private final int CHANCE_TO_DROP_GEMS = 30;
 
 	static int counter = 0;
 

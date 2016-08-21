@@ -9,6 +9,7 @@ public class UltimateBoss extends BossMonsters {
 		this.setCritMultiplier(8);
 		this.setDmg((int) (this.getDmg() * 1.5));
 		this.setMAXHP(this.getMAXHP() * 2);
+		this.setHP(this.getMAXHP());
 	}
 
 }
