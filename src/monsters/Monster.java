@@ -51,7 +51,6 @@ public abstract class Monster {
 		this.attackSpeed = 100 - this.ATTACK_SPEED_PER_LEVEL * this.level;
 		this.critChance = this.MIN_CRIT_CHANCE + this.CRIT_CHANCE_PER_LEVEL * this.level;
 		this.critMultiplier = this.MIN_CRIT_MULTIPLIER + this.MIN_CRIT_MULTIPLIER * this.level;
-		System.out.println("A " + this.type + " Monster was created");
 	}
 
 	public Monster(Hero enemy, int level) {
@@ -111,7 +110,10 @@ public abstract class Monster {
 	public void setType(String type) {
 		this.type = type;
 	}
-
+	public String getType() {
+		return type;
+	}
+	
 	public int getMAXHP() {
 		return MAXHP;
 	}

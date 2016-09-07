@@ -18,6 +18,8 @@ public class EasyMonsters extends Monster {
 	public EasyMonsters(Hero enemy) {
 		super(enemy);
 		this.setType("easy");
+
+		System.out.println("An " + getType() + " Monster was created");
 		this.setDmg((int) (this.getDmg() * this.HP_DMG_DIFFICULTY_MODIFIER));
 		this.setMAXHP((int) (this.getMAXHP() * this.HP_DMG_DIFFICULTY_MODIFIER));
 		this.setHP(this.getMAXHP());

@@ -19,6 +19,8 @@ public class MedMonsters extends Monster {
 	public MedMonsters(Hero enemy) {
 		super(enemy);
 		this.setType("medium");
+
+		System.out.println("A " + getType() + " Monster was created");
 		this.setDmg((int) (this.getDmg() * this.HP_DMG_DIFFICULTY_MODIFIER));
 		this.setMAXHP((int) (this.getMAXHP() * this.HP_DMG_DIFFICULTY_MODIFIER));
 		this.setHP(this.getMAXHP());

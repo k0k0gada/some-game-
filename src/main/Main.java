@@ -44,6 +44,7 @@ public class Main {
 
 	public static void chooseOption(Hero hero) {
 		Scanner sc = new Scanner(System.in);
+		System.out.println("======================");
 		System.out.println("what will you do? ");
 		System.out.println(
 				"f=go fight;\th=use potion;\tu=upgrade Items;\tc=go to city;\tsi=show item info\n9=show all encountered monsters;\ti=get hero info;\tlw=Look for the ultimate boss(he must be dead in order for you to win the game!);\trestart=restart");
@@ -109,6 +110,10 @@ public class Main {
 			}
 			if (monsters.get(i).isAlive()) {
 				System.out.println("You meet :");
+				if (!hero.isAlive()) {
+					System.out.println("but you are dead :( !");
+					return;
+				}
 				hero.fight(monsters.get(i));
 			}
 		}
@@ -121,6 +126,7 @@ public class Main {
 		Monster m = null;
 		int moreLevels = 1 + Main.rd.nextInt(2);
 		if (hero.getLevel() == 1) {
+			System.out.println("======================");
 			System.out.println("what would you like to look for ?");
 			System.out.println(
 					"easy/medium/hard/BOSS\t  \n!THERE IS ALWAYS 2 % chance to get a boss and 1 % to get ultimate BOSS!\n"
@@ -201,6 +207,7 @@ public class Main {
 			if (hero.getLevel() == 2) {
 				moreLevels = 1;
 			}
+			System.out.println("======================");
 			System.out.println("what would you like to look for ?");
 			System.out.println(
 					"easy/medium/hard/BOSS\t  !THERE IS ALWAYS 2 % chance to get a boss and 1 % to get ultimate BOSS!\n"
@@ -306,7 +313,7 @@ public class Main {
 	}
 
 	static String setHeroName() {
-		System.out.println("prepare to enter hero's name.");
+		System.out.println();
 		System.out.println("minimum 3 characters long! Only letters; digits; and ',' ; '.' ; '-' ; '_' allowed");
 		String name;
 		boolean nameOK;

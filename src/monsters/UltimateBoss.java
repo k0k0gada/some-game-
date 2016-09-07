@@ -4,6 +4,7 @@ public class UltimateBoss extends BossMonsters {
 
 	public UltimateBoss(int level) {
 		super(level);
+		this.setType("!!ULTIMATE BOSS !!");
 		this.setAttackSpeed(2);
 		this.setCritChance(85);
 		this.setCritMultiplier(8);

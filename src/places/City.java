@@ -56,6 +56,8 @@ public class City {
 
 	}
 
+	}
+
 	private static void showMerchantItems(Hero hero) {
 		System.out.println("the merchant offers:");
 		System.out.println(
